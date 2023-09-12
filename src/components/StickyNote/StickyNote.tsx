@@ -1,6 +1,6 @@
 import { useRef } from "react"
-import { TextArea, Header, Container } from "src/components/StickyNote/StickyNote.styled"
-import { setNoteData } from "src/slices/noteSlice"
+import { TextArea, Header, Container, DeleteButton, MovableHeader } from "src/components/StickyNote/StickyNote.styled"
+import { deleteNote, setNoteData } from "src/slices/noteSlice"
 import { AppDispatch } from "src/store"
 import { useDispatch } from "react-redux"
 import { NoteData } from "src/types"
@@ -45,17 +45,23 @@ const StickyNote = ({note} : {note : NoteData}) => {
       yCord: noteRef.current!.style.top,
       text: event.target.value
     }
-    console.log(newNote.text)
     dispatch(setNoteData(newNote))
+  }
+
+  const handleDelete = () => {
+    dispatch(deleteNote(note.id))
   }
 
   return (
     <Container ref = {noteRef} style={{
       left: note.xCord,
       top: note.yCord}}>
-      <Header
-        onMouseDown={handleMouseDown}
-      />
+      <Header>
+        <MovableHeader
+          onMouseDown={handleMouseDown}
+        />
+        <DeleteButton onClick={handleDelete}>x</DeleteButton>
+      </Header>
       <TextArea defaultValue = {note.text} onChange={handleChange} />
     </Container>
   )

@@ -8,6 +8,7 @@ import { AppDispatch } from "src/store"
 import { addNote } from "src/slices/noteSlice"
 
 const MainPage = () => {
+  //localStorage.clear()
   const notesData: NoteData[] = useAppSelector((state) => state.note.Notes)
   const dispatch = useDispatch<AppDispatch>()
 

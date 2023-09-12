@@ -5,6 +5,7 @@ module.exports = [
   {
     entry: "./src/index.tsx",
     mode: "development",
+    devtool: "source-map",
     target: "web",
     output: {
       path: path.resolve(__dirname, "dist"),

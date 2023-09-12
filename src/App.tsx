@@ -6,7 +6,6 @@ import MainPage from "src/pages/MainPage/MainPage"
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>()
- 
   useEffect(()=>{
     dispatch(loadNoteData())
   }, [])

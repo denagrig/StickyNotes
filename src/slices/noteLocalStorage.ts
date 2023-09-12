@@ -25,19 +25,39 @@ export const loadNotes = async () => {
 
 export const pushNote = async () => {
   return new Promise<NoteData[]>((resolve) => {
+    //timeout
     const notesArray: NoteData[] = JSON.parse(
       localStorage.getItem("notesArray") || "[]"
     )
-    console.log("here")
     const newNote: NoteData = {
       id: notesArray.length,
-      xCord: "10px",
-      yCord: "10px",
+      xCord: "5px",
+      yCord: "5px",
       text: ""
     }
-    console.log("and here")
     notesArray.push(newNote)
-    console.log(notesArray.length)
+    localStorage.setItem("notesArray", JSON.stringify(notesArray))
+    resolve(notesArray)
+    return notesArray
+  })
+}
+
+export const popNote = async (id: number) => {
+  return new Promise<NoteData[]>((resolve) => {
+    let notePos = 0
+    let splicePos = 0
+    const notesArray: NoteData[] = JSON.parse(
+      localStorage.getItem("notesArray") || "[]"
+    )
+    notesArray.map(note => {
+      if(note.id == id) {
+        splicePos = notePos
+      }
+      else if(note.id > id)
+        notesArray[notePos].id--
+      notePos++
+    })
+    notesArray.splice(splicePos, 1)
     localStorage.setItem("notesArray", JSON.stringify(notesArray))
     resolve(notesArray)
     return notesArray
