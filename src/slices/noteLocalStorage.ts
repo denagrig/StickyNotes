@@ -2,43 +2,58 @@ import { NoteData } from "src/types"
 
 export const saveNote = async (NoteData: NoteData) => {
   return new Promise<NoteData[]>((resolve) => {
-    const notesArray: NoteData[] = JSON.parse(
-      localStorage.getItem("notesArray") || "[]"
+    const notesRecord: NoteData[] = JSON.parse(
+      localStorage.getItem("notesRecord") || "[]"
     )
     const id = NoteData.id
-    notesArray[id] = NoteData
-    localStorage.setItem("notesArray", JSON.stringify(notesArray))
-    resolve(notesArray)
-    return notesArray
+    let notePlace = 0
+    let curNote = 0
+    notesRecord.map((note) => {
+      if (note.id == id) {
+        notePlace = curNote
+      }
+      curNote++
+    })
+    notesRecord[notePlace] = NoteData
+    localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
+    resolve(notesRecord)
+    return notesRecord
   })
 }
 
 export const loadNotes = async () => {
   return new Promise<NoteData[]>((resolve) => {
-    const notesArray: NoteData[] = JSON.parse(
-      localStorage.getItem("notesArray") || "[]"
+    const notesRecord: NoteData[] = JSON.parse(
+      localStorage.getItem("notesRecord") || "[]"
     )
-    resolve(notesArray)
-    return notesArray
+    resolve(notesRecord)
+    return notesRecord
   })
 }
 
 export const pushNote = async () => {
   return new Promise<NoteData[]>((resolve) => {
-    //timeout
-    const notesArray: NoteData[] = JSON.parse(
-      localStorage.getItem("notesArray") || "[]"
+    const notesRecord: NoteData[] = JSON.parse(
+      localStorage.getItem("notesRecord") || "[]"
+    )
+    let notesId: number = JSON.parse(
+      localStorage.getItem("notesID") || "0"
     )
     const newNote: NoteData = {
-      id: notesArray.length,
+      id: notesId,
       xCord: "5px",
       yCord: "5px",
-      text: ""
+      height: "300px",
+      width: "300px",
+      text: "",
     }
-    notesArray.push(newNote)
-    localStorage.setItem("notesArray", JSON.stringify(notesArray))
-    resolve(notesArray)
-    return notesArray
+    notesRecord.push(newNote)
+    notesId++
+    console.log(notesId)
+    localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
+    localStorage.setItem("notesID", JSON.stringify(notesId))
+    resolve(notesRecord)
+    return notesRecord
   })
 }
 
@@ -46,20 +61,19 @@ export const popNote = async (id: number) => {
   return new Promise<NoteData[]>((resolve) => {
     let notePos = 0
     let splicePos = 0
-    const notesArray: NoteData[] = JSON.parse(
-      localStorage.getItem("notesArray") || "[]"
+    const notesRecord: NoteData[] = JSON.parse(
+      localStorage.getItem("notesRecord") || "[]"
     )
-    notesArray.map(note => {
-      if(note.id == id) {
+    notesRecord.map((note) => {
+      if (note.id == id) {
         splicePos = notePos
       }
-      else if(note.id > id)
-        notesArray[notePos].id--
       notePos++
     })
-    notesArray.splice(splicePos, 1)
-    localStorage.setItem("notesArray", JSON.stringify(notesArray))
-    resolve(notesArray)
-    return notesArray
+    notesRecord.splice(splicePos, 1)
+    localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
+    console.log(notesRecord)
+    resolve(notesRecord)
+    return notesRecord
   })
 }

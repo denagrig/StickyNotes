@@ -1,4 +1,3 @@
-
 import StickyNote from "src/components/StickyNote/StickyNote"
 import { useAppSelector } from "src/hooks"
 import { NoteData } from "src/types"
@@ -6,6 +5,7 @@ import { AddButton } from "src/pages/MainPage/MainPage.styled."
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "src/store"
 import { addNote } from "src/slices/noteSlice"
+import "@melloware/coloris/dist/coloris.css"
 
 const MainPage = () => {
   //localStorage.clear()
@@ -16,14 +16,14 @@ const MainPage = () => {
     dispatch(addNote())
   }
 
-  return(
+  console.log(notesData)
+
+  return (
     <div>
-      {notesData.map((note : NoteData) => (
-        <StickyNote note={note} key = {note.id}/>
+      {notesData.map((note: NoteData) => (
+        <StickyNote note={note} key={note.id} />
       ))}
-      <AddButton onClick={handleAddNote}>
-        Добавить Заметку +
-      </AddButton>
+      <AddButton onClick={handleAddNote}>Добавить Заметку</AddButton>
     </div>
   )
 }

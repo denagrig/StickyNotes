@@ -1,10 +1,12 @@
-import {
-  createAsyncThunk,
-  createSlice,
-} from "@reduxjs/toolkit" 
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { NoteData } from "src/types"
-import { loadNotes, popNote, pushNote, saveNote } from "src/slices/noteLocalStorage"
-  
+import {
+  loadNotes,
+  popNote,
+  pushNote,
+  saveNote,
+} from "src/slices/noteLocalStorage"
+
 export const setNoteData = createAsyncThunk<NoteData[], NoteData>(
   "NoteSlices/setNoteData",
   async (NoteData: NoteData, thunkAPI) => {
@@ -50,18 +52,17 @@ export const deleteNote = createAsyncThunk<NoteData[], number>(
 )
 
 export interface NotesState {
-  Notes: NoteData[]
+  Notes: NoteData[];
 }
-  
+
 const initialState: NotesState = {
-  Notes: []
+  Notes: [],
 }
-  
+
 const noteSlice = createSlice({
   name: "noteSlices",
   initialState,
-  reducers: {
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(setNoteData.fulfilled, (state, action) => {
       state.Notes = action.payload
@@ -71,11 +72,11 @@ const noteSlice = createSlice({
     }),
     builder.addCase(loadNoteData.fulfilled, (state, action) => {
       state.Notes = action.payload
-    })
+    }),
     builder.addCase(deleteNote.fulfilled, (state, action) => {
       state.Notes = action.payload
     })
   },
 })
-  
+
 export default noteSlice.reducer

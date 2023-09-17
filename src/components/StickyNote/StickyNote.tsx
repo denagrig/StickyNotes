@@ -1,29 +1,40 @@
 import { useRef } from "react"
-import { TextArea, Header, Container, DeleteButton, MovableHeader } from "src/components/StickyNote/StickyNote.styled"
+import {
+  TextArea,
+  Header,
+  Container,
+  DeleteButton,
+  MovableHeader,
+  Resize,
+} from "src/components/StickyNote/StickyNote.styled"
 import { deleteNote, setNoteData } from "src/slices/noteSlice"
 import { AppDispatch } from "src/store"
 import { useDispatch } from "react-redux"
 import { NoteData } from "src/types"
+import { noteMinSize } from "src/data"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faMinus } from "@fortawesome/free-solid-svg-icons"
 
-const StickyNote = ({note} : {note : NoteData}) => {
+const StickyNote = ({ note }: { note: NoteData }) => {
   const noteRef = useRef<HTMLHeadingElement>(null)
   const dispatch = useDispatch<AppDispatch>()
+  
 
-  const handleMouseDown = (event : React.MouseEvent) => {
+  const handleMovement = (event: React.MouseEvent) => {
     const shiftX = event.clientX - noteRef.current!.getBoundingClientRect().left
     const shiftY = event.clientY - noteRef.current!.getBoundingClientRect().top
 
-    const moveAt = (pageX:number, pageY:number) => {
-        noteRef.current!.style.left = pageX - shiftX + "px"
-        noteRef.current!.style.top = pageY - shiftY + "px"
+    const moveAt = (pageX: number, pageY: number) => {
+      noteRef.current!.style.left = pageX - shiftX + "px"
+      noteRef.current!.style.top = pageY - shiftY + "px"
     }
 
     moveAt(event.pageX, event.pageY)
 
-    const onMouseMove = (event : MouseEvent) => {
+    const onMouseMove = (event: MouseEvent) => {
       moveAt(event.pageX, event.pageY)
     }
-    
+
     document.addEventListener("mousemove", onMouseMove)
 
     noteRef.current!.onmouseup = () => {
@@ -32,18 +43,22 @@ const StickyNote = ({note} : {note : NoteData}) => {
         id: note.id,
         xCord: noteRef.current!.style.left,
         yCord: noteRef.current!.style.top,
-        text: note.text
+        height: note.height,
+        width: note.width,
+        text: note.text,
       }
       dispatch(setNoteData(newNote))
     }
   }
 
-  const handleChange = (event : React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newNote: NoteData = {
       id: note.id,
-      xCord: noteRef.current!.style.left,
-      yCord: noteRef.current!.style.top,
-      text: event.target.value
+      xCord: note.xCord,
+      yCord: note.yCord,
+      height: note.height,
+      width: note.width,
+      text: event.target.value,
     }
     dispatch(setNoteData(newNote))
   }
@@ -52,19 +67,55 @@ const StickyNote = ({note} : {note : NoteData}) => {
     dispatch(deleteNote(note.id))
   }
 
+  const handleResize = (event: React.MouseEvent) => {
+    const width =  noteRef.current!.getBoundingClientRect().left
+    const height =  noteRef.current!.getBoundingClientRect().top
+
+    const resize = (pageX: number, pageY: number) => {
+      if(pageX - width > noteMinSize.width)
+        noteRef.current!.style.width = pageX - width + "px"
+      if(pageY - height > noteMinSize.height)
+        noteRef.current!.style.height = pageY - height + "px"
+    }
+
+    resize(event.pageX, event.pageY)
+
+    const onMouseMove = (event: MouseEvent) => {
+      resize(event.pageX, event.pageY)
+    }
+
+    document.addEventListener("mousemove", onMouseMove)
+
+    noteRef.current!.onmouseup = () => {
+      document.removeEventListener("mousemove", onMouseMove)
+      const newNote: NoteData = {
+        id: note.id,
+        xCord: note.xCord,
+        yCord: note.yCord,
+        height: noteRef.current!.style.height,
+        width: noteRef.current!.style.width,
+        text: note.text,
+      }
+      dispatch(setNoteData(newNote))
+    }
+  }
+
   return (
-    <Container ref = {noteRef} style={{
-      left: note.xCord,
-      top: note.yCord}}>
+    <Container ref={noteRef} 
+      $left={note.xCord} 
+      $top={note.yCord} 
+      $height={note.height} 
+      $width={note.width} >
       <Header>
-        <MovableHeader
-          onMouseDown={handleMouseDown}
-        />
-        <DeleteButton onClick={handleDelete}>x</DeleteButton>
+        <MovableHeader onMouseDown={handleMovement} />
+        <DeleteButton onClick={handleDelete}>
+          <FontAwesomeIcon icon={faMinus} />
+        </DeleteButton>
       </Header>
-      <TextArea defaultValue = {note.text} onChange={handleChange} />
+      <TextArea defaultValue={note.text} onChange={handleTextChange}/>
+      <Resize onMouseDown={handleResize}/>
     </Container>
   )
 }
-  
+
 export default StickyNote
