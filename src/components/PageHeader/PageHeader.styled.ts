@@ -7,4 +7,6 @@ export const AddButton = styled.button`
   border-radius: 10px;
   cursor: pointer;
   border: none;
+  position: relative;
+  z-index: 2;
 `

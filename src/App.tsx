@@ -10,7 +10,10 @@ const App = () => {
     dispatch(loadNoteData())
   }, [])
 
-  return <MainPage />
+  return (
+    <MainPage />
+  )
 }
 
+//vp.camra.moveby
 export default App

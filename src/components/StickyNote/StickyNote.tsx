@@ -43,8 +43,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
   })
 
   const handleMovement = (event: React.MouseEvent) => {
-    const shiftX =
-      event.clientX - noteRef.current!.getBoundingClientRect().left
+    const shiftX = event.clientX - noteRef.current!.getBoundingClientRect().left
     const shiftY = event.clientY - noteRef.current!.getBoundingClientRect().top
 
     const moveAt = (pageX: number, pageY: number) => {
@@ -53,6 +52,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     }
 
     moveAt(event.pageX, event.pageY)
+    console.log(event.pageX - shiftX)
 
     const onMouseMove = (event: MouseEvent) => {
       moveAt(event.pageX, event.pageY)
@@ -95,7 +95,6 @@ const StickyNote = ({ note }: { note: NoteData }) => {
   const handleResize = (event: React.MouseEvent) => {
     const width = noteRef.current!.getBoundingClientRect().left
     const height = noteRef.current!.getBoundingClientRect().top
-
     const resize = (pageX: number, pageY: number) => {
       if (pageX - width > noteMinSize.width)
         noteRef.current!.style.width = pageX - width + "px"
@@ -104,6 +103,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     }
 
     resize(event.pageX, event.pageY)
+    
 
     const onMouseMove = (event: MouseEvent) => {
       resize(event.pageX, event.pageY)

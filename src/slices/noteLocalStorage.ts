@@ -41,8 +41,8 @@ export const pushNote = async () => {
     )
     const newNote: NoteData = {
       id: notesId,
-      xCord: "5px",
-      yCord: "5px",
+      xCord: "10px",
+      yCord: "50px",
       height: "300px",
       width: "300px",
       text: "",

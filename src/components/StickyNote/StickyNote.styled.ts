@@ -6,8 +6,8 @@ export const Container = styled.div<{ $top?: string; $left?: string; $height?: s
   height: ${(props) => props.$height || "300px"};
   border: 3px solid #333;
   position: absolute;
-  top: ${(props) => props.$top || "10px"};
-  left: ${(props) => props.$left ||"10px"};
+  top: ${(props) => props.$top || "30px"};
+  left: ${(props) => props.$left ||"30px"};
   background:  ${(props) => props.$color || "lightgreen"};;
   display: inline-block;
   border-radius: 10px;
@@ -85,10 +85,10 @@ export const ChangeColorInput = styled.input`
 `
 
 export const BrushIcon = styled(FontAwesomeIcon)`
-    color: black;
-    font-size: 1.2rem;
-    position: absolute;
-    top: 3px;
-    left: 5px;
-    pointer-events: none;
+  color: black;
+  font-size: 1.2rem;
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  pointer-events: none;
 `
