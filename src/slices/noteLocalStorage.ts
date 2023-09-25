@@ -46,6 +46,7 @@ export const pushNote = async () => {
       height: "300px",
       width: "300px",
       text: "",
+      color: "lightgreen",
     }
     notesRecord.push(newNote)
     notesId++
