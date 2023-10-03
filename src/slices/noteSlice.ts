@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { NoteData } from "src/types"
 import {
+  clearAllNotes,
   loadNotes,
   popNote,
   pushNote,
@@ -51,6 +52,17 @@ export const deleteNote = createAsyncThunk<NoteData[], number>(
   }
 )
 
+export const clearNotes = createAsyncThunk<NoteData[], void>(
+  "NoteSlices/clearNotes",
+  async (params: void, thunkAPI) => {
+    try {
+      return await clearAllNotes()
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e)
+    }
+  }
+)
+
 export interface NotesState {
   Notes: NoteData[];
 }
@@ -74,6 +86,9 @@ const noteSlice = createSlice({
       state.Notes = action.payload
     }),
     builder.addCase(deleteNote.fulfilled, (state, action) => {
+      state.Notes = action.payload
+    })
+    builder.addCase(clearNotes.fulfilled, (state, action) => {
       state.Notes = action.payload
     })
   },

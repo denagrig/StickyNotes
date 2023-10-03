@@ -4,6 +4,8 @@ import { NoteData } from "src/types"
 import "@melloware/coloris/dist/coloris.css"
 import { NoPanArea, Space } from "react-zoomable-ui"
 import PageHeader from "src/components/PageHeader/PageHeader"
+import { BackgroundImg } from "./MainPage.styled"
+//import background from "src/assets/background.jpg"
 
 const MainPage = () => {
   //localStorage.clear()
@@ -11,12 +13,14 @@ const MainPage = () => {
 
   return (
     <div>
-      <Space onCreate={vp => vp.setBounds({ x: [-10000, 10000], y: [-10000, 10000]})}>
-        <NoPanArea>
-          {notesData.map((note: NoteData) => (
-            <StickyNote note={note} key={note.id} />
-          ))}
-        </NoPanArea>
+      <Space onCreate={vp => vp.setBounds({ x: [0, 10000], y: [0, 10000]})}>
+        <BackgroundImg>
+          <NoPanArea>
+            {notesData.map((note: NoteData) => (
+              <StickyNote note={note} key={note.id} />
+            ))}
+          </NoPanArea>
+        </BackgroundImg>
       </Space>
       <PageHeader />
     </div>

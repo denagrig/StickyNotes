@@ -19,10 +19,14 @@ import { faMinus, faPaintBrush } from "@fortawesome/free-solid-svg-icons"
 import "@melloware/coloris/dist/coloris.css"
 import Coloris from "@melloware/coloris"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import React from "react"
+import { SpaceContext } from "react-zoomable-ui"
 
 const StickyNote = ({ note }: { note: NoteData }) => {
   const noteRef = useRef<HTMLHeadingElement>(null)
   const dispatch = useDispatch<AppDispatch>()
+  const context = React.useContext(SpaceContext)
+
   Coloris.init()
   Coloris.coloris({
     el: "#coloris",
@@ -42,17 +46,29 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     ],
   })
 
+  const newNote: NoteData = {
+    id: note.id,
+    xCord: note.xCord,
+    yCord: note.yCord,
+    height: note.height,
+    width: note.width,
+    text: note.text,
+    color: note.color,
+  }
+
   const handleMovement = (event: React.MouseEvent) => {
-    const shiftX = event.clientX - noteRef.current!.getBoundingClientRect().left
-    const shiftY = event.clientY - noteRef.current!.getBoundingClientRect().top
+    const vp = context.viewPort
+
+    const shiftX = event.clientX - noteRef.current!.getBoundingClientRect().left - vp.left
+    const shiftY = event.clientY - noteRef.current!.getBoundingClientRect().top - vp.top
 
     const moveAt = (pageX: number, pageY: number) => {
       noteRef.current!.style.left = pageX - shiftX + "px"
       noteRef.current!.style.top = pageY - shiftY + "px"
+      //add vp.zoomFactor 
     }
 
     moveAt(event.pageX, event.pageY)
-    console.log(event.pageX - shiftX)
 
     const onMouseMove = (event: MouseEvent) => {
       moveAt(event.pageX, event.pageY)
@@ -62,29 +78,14 @@ const StickyNote = ({ note }: { note: NoteData }) => {
 
     noteRef.current!.onmouseup = () => {
       document.removeEventListener("mousemove", onMouseMove)
-      const newNote: NoteData = {
-        id: note.id,
-        xCord: noteRef.current!.style.left,
-        yCord: noteRef.current!.style.top,
-        height: note.height,
-        width: note.width,
-        text: note.text,
-        color: note.color,
-      }
+      newNote.xCord = noteRef.current!.style.left
+      newNote.yCord = noteRef.current!.style.top
       dispatch(setNoteData(newNote))
     }
   }
 
   const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newNote: NoteData = {
-      id: note.id,
-      xCord: note.xCord,
-      yCord: note.yCord,
-      height: note.height,
-      width: note.width,
-      text: event.target.value,
-      color: note.color,
-    }
+    newNote.text = event.target.value
     dispatch(setNoteData(newNote))
   }
 
@@ -113,29 +114,14 @@ const StickyNote = ({ note }: { note: NoteData }) => {
 
     noteRef.current!.onmouseup = () => {
       document.removeEventListener("mousemove", onMouseMove)
-      const newNote: NoteData = {
-        id: note.id,
-        xCord: note.xCord,
-        yCord: note.yCord,
-        height: noteRef.current!.style.height,
-        width: noteRef.current!.style.width,
-        text: note.text,
-        color: note.color,
-      }
+      newNote.height = noteRef.current!.style.height
+      newNote.width = noteRef.current!.style.width
       dispatch(setNoteData(newNote))
     }
   }
 
   const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newNote: NoteData = {
-      id: note.id,
-      xCord: note.xCord,
-      yCord: note.yCord,
-      height: note.height,
-      width: note.width,
-      text: note.text,
-      color: event.target.value,
-    }
+    newNote.color = event.target.value,
     dispatch(setNoteData(newNote))
   }
 

@@ -50,7 +50,6 @@ export const pushNote = async () => {
     }
     notesRecord.push(newNote)
     notesId++
-    console.log(notesId)
     localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
     localStorage.setItem("notesID", JSON.stringify(notesId))
     resolve(notesRecord)
@@ -73,7 +72,15 @@ export const popNote = async (id: number) => {
     })
     notesRecord.splice(splicePos, 1)
     localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
-    console.log(notesRecord)
+    resolve(notesRecord)
+    return notesRecord
+  })
+}
+
+export const clearAllNotes = async () => {
+  return new Promise<NoteData[]>((resolve) => {
+    const notesRecord: NoteData[] = []
+    localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
     resolve(notesRecord)
     return notesRecord
   })
