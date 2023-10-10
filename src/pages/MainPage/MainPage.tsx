@@ -24,13 +24,13 @@ const MainPage = () => {
     dispatch(setSpaceData(newSpaceData))
   }
 
-  //zooms correctly onlyafter reload?
+  //zooms correctly onlyafter reload
 
   return (
     <div>
       <Space onCreate={vp => {
         vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3]})
-        vp.camera.moveBy(spaceData.xCord, spaceData.yCord, (1-spaceData.zoomFactor))}
+        vp.camera.moveBy(spaceData.xCord, spaceData.yCord)}
       }
       onUpdated={(vp) => updateCords(vp.top, vp.left, vp.zoomFactor)}>
         <BackgroundImg>
