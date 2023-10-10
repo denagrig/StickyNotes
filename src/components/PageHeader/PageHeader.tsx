@@ -1,29 +1,47 @@
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { useDispatch } from "react-redux"
 import { AddButton, Buttons, ClearButton } from "src/components/PageHeader/PageHeader.styled"
 import { addNote, clearNotes } from "src/slices/noteSlice"
 import { AppDispatch } from "src/store"
+import { CordsPair, VpData } from "src/types"
 
-const PageHeader = () => {
+const PageHeader = ({spaceData}: { spaceData: VpData}) => {
   const dispatch = useDispatch<AppDispatch>()
   const addButtonRef = useRef<HTMLButtonElement>(null)
+  const [canAddNote, setCanAddNote] = useState<boolean>(false)
+
+  const createNoteAtCords = (noteX: number, noteY: number) => {
+    const createCords: CordsPair = {
+      xCord: noteX + spaceData.xCord,
+      yCord: noteY + spaceData.yCord,
+    }
+    dispatch(addNote(createCords))
+  }
+
+
+  const onClick = (event: MouseEvent) => {
+    const element = event.target as HTMLElement   
+    createNoteAtCords(event.pageX, event.pageY)
+    console.log("el:",element.className)
+  }
+
 
   const handleAddNote = () => {
-    delayClick()
-    dispatch(addNote())
+   
+    if(canAddNote == false)
+    {
+      setCanAddNote(true) 
+      document.addEventListener("click", onClick)
+    }
+    else
+    {
+      setCanAddNote(false)
+      document.removeEventListener("click", onClick)
+    } 
   }
 
   const handleClear = () => {
     dispatch(clearNotes())
-  }
-
-  const delayClick = () => {
-    addButtonRef.current!.disabled = true
-    addButtonRef.current!.style.boxShadow = "inset 0px 0px 5px #c1c1c1"
-    setTimeout(function () {
-      addButtonRef.current!.disabled = false
-      addButtonRef.current!.style.boxShadow = "0px 0px 5px #c1c1c1"
-    }, 250)
   }
 
   return (
@@ -31,7 +49,7 @@ const PageHeader = () => {
       <AddButton onClick={handleAddNote} ref={addButtonRef}>
         Добавить Заметку
       </AddButton>
-      <ClearButton  onClick= {handleClear}>
+      <ClearButton onClick= {handleClear}>
         Очистить
       </ClearButton>
     </Buttons>

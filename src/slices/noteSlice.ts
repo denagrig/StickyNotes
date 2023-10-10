@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { NoteData } from "src/types"
+import { CordsPair, NoteData } from "src/types"
 import {
   clearAllNotes,
   loadNotes,
@@ -9,7 +9,7 @@ import {
 } from "src/slices/noteLocalStorage"
 
 export const setNoteData = createAsyncThunk<NoteData[], NoteData>(
-  "NoteSlices/setNoteData",
+  "noteSlice/setNoteData",
   async (NoteData: NoteData, thunkAPI) => {
     try {
       return await saveNote(NoteData)
@@ -19,11 +19,11 @@ export const setNoteData = createAsyncThunk<NoteData[], NoteData>(
   }
 )
 
-export const addNote = createAsyncThunk<NoteData[], void>(
-  "NoteSlices/addNote",
-  async (params: void, thunkAPI) => {
+export const addNote = createAsyncThunk<NoteData[], CordsPair>(
+  "noteSlice/addNote",
+  async (cords: CordsPair, thunkAPI) => {
     try {
-      return await pushNote()
+      return await pushNote(cords)
     } catch (e) {
       return thunkAPI.rejectWithValue(e)
     }
@@ -31,7 +31,7 @@ export const addNote = createAsyncThunk<NoteData[], void>(
 )
 
 export const loadNoteData = createAsyncThunk<NoteData[], void>(
-  "NoteSlices/loadNoteData",
+  "noteSlice/loadNoteData",
   async (params: void, thunkAPI) => {
     try {
       return await loadNotes()
@@ -42,7 +42,7 @@ export const loadNoteData = createAsyncThunk<NoteData[], void>(
 )
 
 export const deleteNote = createAsyncThunk<NoteData[], number>(
-  "NoteSlices/deleteNote",
+  "noteSlice/deleteNote",
   async (id: number, thunkAPI) => {
     try {
       return await popNote(id)
@@ -53,7 +53,7 @@ export const deleteNote = createAsyncThunk<NoteData[], number>(
 )
 
 export const clearNotes = createAsyncThunk<NoteData[], void>(
-  "NoteSlices/clearNotes",
+  "noteSlice/clearNotes",
   async (params: void, thunkAPI) => {
     try {
       return await clearAllNotes()
@@ -72,7 +72,7 @@ const initialState: NotesState = {
 }
 
 const noteSlice = createSlice({
-  name: "noteSlices",
+  name: "noteSlice",
   initialState,
   reducers: {},
   extraReducers: (builder) => {

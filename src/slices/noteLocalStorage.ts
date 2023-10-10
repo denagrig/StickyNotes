@@ -1,4 +1,4 @@
-import { NoteData } from "src/types"
+import { CordsPair, NoteData } from "src/types"
 
 export const saveNote = async (NoteData: NoteData) => {
   return new Promise<NoteData[]>((resolve) => {
@@ -31,7 +31,7 @@ export const loadNotes = async () => {
   })
 }
 
-export const pushNote = async () => {
+export const pushNote = async (cords: CordsPair) => {
   return new Promise<NoteData[]>((resolve) => {
     const notesRecord: NoteData[] = JSON.parse(
       localStorage.getItem("notesRecord") || "[]"
@@ -41,8 +41,8 @@ export const pushNote = async () => {
     )
     const newNote: NoteData = {
       id: notesId,
-      xCord: "10px",
-      yCord: "50px",
+      xCord: cords.xCord + "px",
+      yCord: cords.yCord + "px",
       height: "300px",
       width: "300px",
       text: "",

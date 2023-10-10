@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useCallback, useRef, useState } from "react"
 import {
   TextArea,
   Header,
@@ -13,7 +13,7 @@ import {
 import { deleteNote, setNoteData } from "src/slices/noteSlice"
 import { AppDispatch } from "src/store"
 import { useDispatch } from "react-redux"
-import { NoteData } from "src/types"
+import { NoteData, VpData } from "src/types"
 import { noteMinSize } from "src/data"
 import { faMinus, faPaintBrush } from "@fortawesome/free-solid-svg-icons"
 import "@melloware/coloris/dist/coloris.css"
@@ -22,7 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { SpaceContext } from "react-zoomable-ui"
 
-const StickyNote = ({ note }: { note: NoteData }) => {
+const StickyNote = ({ note, spaceData}: { note: NoteData,  spaceData: VpData}) => {
   const noteRef = useRef<HTMLHeadingElement>(null)
   const dispatch = useDispatch<AppDispatch>()
   const context = React.useContext(SpaceContext)
@@ -46,7 +46,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     ],
   })
 
-  const newNote: NoteData = {
+  const [noteChanges, setNoteChanges] = useState<NoteData>({
     id: note.id,
     xCord: note.xCord,
     yCord: note.yCord,
@@ -54,76 +54,102 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     width: note.width,
     text: note.text,
     color: note.color,
-  }
+  })
 
-  const handleMovement = (event: React.MouseEvent) => {
-    const vp = context.viewPort
+  const handleMovement = useCallback(
+    (event: React.MouseEvent) => {
+      const vp = context.viewPort
 
-    const shiftX = event.clientX - noteRef.current!.getBoundingClientRect().left - vp.left
-    const shiftY = event.clientY - noteRef.current!.getBoundingClientRect().top - vp.top
+      const shiftX =
+        event.clientX - noteRef.current!.getBoundingClientRect().left - vp.left
+      const shiftY =
+        event.clientY - noteRef.current!.getBoundingClientRect().top - vp.top
+      console.log("Context x cord:", vp.left, "real x cord", spaceData.xCord)
+      console.log("Context y cord:", vp.top, "real y cord", spaceData.yCord)
+      console.log("Context zoom:", vp.zoomFactor, "real zoom", spaceData.zoomFactor)
+      //real cords are updating only after rerender, same with zoom
 
-    const moveAt = (pageX: number, pageY: number) => {
-      noteRef.current!.style.left = pageX - shiftX + "px"
-      noteRef.current!.style.top = pageY - shiftY + "px"
-      //add vp.zoomFactor 
-    }
+      const moveAt = (pageX: number, pageY: number) => {
+        noteRef.current!.style.left = (pageX - shiftX) / vp.zoomFactor + "px"
+        noteRef.current!.style.top = (pageY - shiftY) / vp.zoomFactor + "px"
+        //add vp.zoomFactor for zoom <1
 
-    moveAt(event.pageX, event.pageY)
+      }
 
-    const onMouseMove = (event: MouseEvent) => {
       moveAt(event.pageX, event.pageY)
-    }
 
-    document.addEventListener("mousemove", onMouseMove)
+      const onMouseMove = (event: MouseEvent) => {
+        moveAt(event.pageX, event.pageY)
+      }
 
-    noteRef.current!.onmouseup = () => {
-      document.removeEventListener("mousemove", onMouseMove)
-      newNote.xCord = noteRef.current!.style.left
-      newNote.yCord = noteRef.current!.style.top
+      document.addEventListener("mousemove", onMouseMove)
+
+      noteRef.current!.onmouseup = () => {
+        document.removeEventListener("mousemove", onMouseMove)
+        const newNote = Object.assign({}, noteChanges)
+        newNote.xCord = noteRef.current!.style.left
+        newNote.yCord = noteRef.current!.style.top
+        setNoteChanges(newNote)
+        dispatch(setNoteData(newNote))
+      }
+    },
+    [noteChanges]
+  )
+
+  const handleTextChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const newNote = Object.assign({}, noteChanges)
+      newNote.text = event.target.value
+      setNoteChanges(newNote)
       dispatch(setNoteData(newNote))
-    }
-  }
-
-  const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    newNote.text = event.target.value
-    dispatch(setNoteData(newNote))
-  }
+    },
+    [noteChanges]
+  )
 
   const handleDelete = () => {
     dispatch(deleteNote(note.id))
   }
 
-  const handleResize = (event: React.MouseEvent) => {
-    const width = noteRef.current!.getBoundingClientRect().left
-    const height = noteRef.current!.getBoundingClientRect().top
-    const resize = (pageX: number, pageY: number) => {
-      if (pageX - width > noteMinSize.width)
-        noteRef.current!.style.width = pageX - width + "px"
-      if (pageY - height > noteMinSize.height)
-        noteRef.current!.style.height = pageY - height + "px"
-    }
+  const handleResize = useCallback(
+    (event: React.MouseEvent) => {
+      const width = noteRef.current!.getBoundingClientRect().left
+      const height = noteRef.current!.getBoundingClientRect().top
+      const resize = (pageX: number, pageY: number) => {
+        if (pageX - width > noteMinSize.width)
+          noteRef.current!.style.width = pageX - width + "px"
+        if (pageY - height > noteMinSize.height)
+          noteRef.current!.style.height = pageY - height + "px"
+      }
 
-    resize(event.pageX, event.pageY)
-    
-
-    const onMouseMove = (event: MouseEvent) => {
       resize(event.pageX, event.pageY)
-    }
 
-    document.addEventListener("mousemove", onMouseMove)
+      const onMouseMove = (event: MouseEvent) => {
+        resize(event.pageX, event.pageY)
+      }
 
-    noteRef.current!.onmouseup = () => {
-      document.removeEventListener("mousemove", onMouseMove)
-      newNote.height = noteRef.current!.style.height
-      newNote.width = noteRef.current!.style.width
+      document.addEventListener("mousemove", onMouseMove)
+
+      noteRef.current!.onmouseup = () => {
+        document.removeEventListener("mousemove", onMouseMove)
+        const newNote = Object.assign({}, noteChanges)
+        newNote.height = noteRef.current!.style.height
+        newNote.width = noteRef.current!.style.width
+        setNoteChanges(newNote)
+        dispatch(setNoteData(newNote))
+      }
+    },
+    [noteChanges]
+  )
+
+  const handleColorChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newNote = Object.assign({}, noteChanges)
+      newNote.color = event.target.value
+      setNoteChanges(newNote)
       dispatch(setNoteData(newNote))
-    }
-  }
-
-  const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    newNote.color = event.target.value,
-    dispatch(setNoteData(newNote))
-  }
+    },
+    [noteChanges]
+  )
 
   return (
     <Container

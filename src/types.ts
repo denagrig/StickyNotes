@@ -8,4 +8,15 @@ type NoteData = {
     color: string
 }
 
-export type {NoteData}
+type VpData = {
+    xCord: number
+    yCord: number
+    zoomFactor: number
+}
+
+type CordsPair = {
+    xCord: number
+    yCord: number
+}
+
+export type {NoteData, VpData, CordsPair}

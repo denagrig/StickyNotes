@@ -1,4 +1,6 @@
 import { NoteData } from "src/types"
+export const enum SpaceStatus { Ready = 0, ViewPortCreated = -1, SpaceCreated = -2}
+
 export const noteMinSize = {
   height: 200,
   width: 150
