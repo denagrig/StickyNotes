@@ -1,13 +1,15 @@
 import { useRef, useState } from "react"
 import { useDispatch } from "react-redux"
 import { AddButton, Buttons, ClearButton } from "src/components/PageHeader/PageHeader.styled"
+import { useAppSelector } from "src/hooks"
 import { addNote, clearNotes } from "src/slices/noteSlice"
 import { AppDispatch } from "src/store"
 import { CordsPair, VpData } from "src/types"
 
-const PageHeader = ({spaceData}: { spaceData: VpData}) => {
+const PageHeader = () => {
   const dispatch = useDispatch<AppDispatch>()
   const addButtonRef = useRef<HTMLButtonElement>(null)
+  const spaceData: VpData = useAppSelector((state) => state.space.spaceData)
   const [canAddNote, setCanAddNote] = useState<boolean>(false)
 
   const createNoteAtCords = (noteX: number, noteY: number) => {

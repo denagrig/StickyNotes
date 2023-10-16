@@ -21,10 +21,12 @@ import Coloris from "@melloware/coloris"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { SpaceContext } from "react-zoomable-ui"
+import { useAppSelector } from "src/hooks"
 
-const StickyNote = ({ note, spaceData}: { note: NoteData,  spaceData: VpData}) => {
+const StickyNote = ({note}: { note: NoteData}) => {
   const noteRef = useRef<HTMLHeadingElement>(null)
   const dispatch = useDispatch<AppDispatch>()
+  const spaceData: VpData = useAppSelector((state) => state.space.spaceData)
   const context = React.useContext(SpaceContext)
 
   Coloris.init()
@@ -61,19 +63,15 @@ const StickyNote = ({ note, spaceData}: { note: NoteData,  spaceData: VpData}) =
       const vp = context.viewPort
 
       const shiftX =
-        event.clientX - noteRef.current!.getBoundingClientRect().left - vp.left
+        event.clientX - noteRef.current!.getBoundingClientRect().left - spaceData.xCord
       const shiftY =
-        event.clientY - noteRef.current!.getBoundingClientRect().top - vp.top
-      console.log("Context x cord:", vp.left, "real x cord", spaceData.xCord)
-      console.log("Context y cord:", vp.top, "real y cord", spaceData.yCord)
-      console.log("Context zoom:", vp.zoomFactor, "real zoom", spaceData.zoomFactor)
-      //real cords are updating only after rerender, same with zoom
+        event.clientY - noteRef.current!.getBoundingClientRect().top - spaceData.yCord
 
       const moveAt = (pageX: number, pageY: number) => {
         noteRef.current!.style.left = (pageX - shiftX) / vp.zoomFactor + "px"
         noteRef.current!.style.top = (pageY - shiftY) / vp.zoomFactor + "px"
+        console.log("context:", vp.left, "real: ", spaceData.xCord)
         //add vp.zoomFactor for zoom <1
-
       }
 
       moveAt(event.pageX, event.pageY)
@@ -83,7 +81,8 @@ const StickyNote = ({ note, spaceData}: { note: NoteData,  spaceData: VpData}) =
       }
 
       document.addEventListener("mousemove", onMouseMove)
-
+      //move to effect
+      //save on mouse down
       noteRef.current!.onmouseup = () => {
         document.removeEventListener("mousemove", onMouseMove)
         const newNote = Object.assign({}, noteChanges)
@@ -93,7 +92,7 @@ const StickyNote = ({ note, spaceData}: { note: NoteData,  spaceData: VpData}) =
         dispatch(setNoteData(newNote))
       }
     },
-    [noteChanges]
+    [noteChanges, spaceData]
   )
 
   const handleTextChange = useCallback(
@@ -108,16 +107,14 @@ const StickyNote = ({ note, spaceData}: { note: NoteData,  spaceData: VpData}) =
 
   const handleMovementTouch = useCallback(
     (event: React.TouchEvent) => {
-      const vp = context.viewPort
-
       const shiftX =
-        event.touches[0].clientX - noteRef.current!.getBoundingClientRect().left - vp.left
+        event.touches[0].clientX - noteRef.current!.getBoundingClientRect().left - spaceData.xCord
       const shiftY =
-        event.touches[0].clientY - noteRef.current!.getBoundingClientRect().top - vp.top
+        event.touches[0].clientY - noteRef.current!.getBoundingClientRect().top - spaceData.yCord
 
       const moveAt = (pageX: number, pageY: number) => {
-        noteRef.current!.style.left = (pageX - shiftX) / vp.zoomFactor + "px"
-        noteRef.current!.style.top = (pageY - shiftY) / vp.zoomFactor + "px"
+        noteRef.current!.style.left = (pageX - shiftX) / spaceData.zoomFactor + "px"
+        noteRef.current!.style.top = (pageY - shiftY) / spaceData.zoomFactor + "px"
         //add vp.zoomFactor for zoom <1
       }
 
@@ -138,7 +135,7 @@ const StickyNote = ({ note, spaceData}: { note: NoteData,  spaceData: VpData}) =
         dispatch(setNoteData(newNote))
       }
     },
-    [noteChanges]
+    [noteChanges, spaceData]
   )
 
   const handleDelete = () => {
@@ -147,15 +144,13 @@ const StickyNote = ({ note, spaceData}: { note: NoteData,  spaceData: VpData}) =
 
   const handleResize = useCallback(
     (event: React.MouseEvent) => {
-      const vp = context.viewPort
-
       const width = noteRef.current!.getBoundingClientRect().left
       const height = noteRef.current!.getBoundingClientRect().top
       const resize = (pageX: number, pageY: number) => {
-        if ( (pageX - width) / vp.zoomFactor > noteMinSize.width)
-          noteRef.current!.style.width = (pageX - width) / vp.zoomFactor + "px"
-        if ((pageY - height) / vp.zoomFactor > noteMinSize.height)
-          noteRef.current!.style.height = (pageY - height) / vp.zoomFactor  + "px"
+        if ( (pageX - width) / spaceData.zoomFactor > noteMinSize.width)
+          noteRef.current!.style.width = (pageX - width) / spaceData.zoomFactor + "px"
+        if ((pageY - height) / spaceData.zoomFactor > noteMinSize.height)
+          noteRef.current!.style.height = (pageY - height) / spaceData.zoomFactor  + "px"
       }
 
       resize(event.pageX, event.pageY)
@@ -175,20 +170,18 @@ const StickyNote = ({ note, spaceData}: { note: NoteData,  spaceData: VpData}) =
         dispatch(setNoteData(newNote))
       }
     },
-    [noteChanges]
+    [noteChanges, spaceData]
   )
 
   const handleResizeTouch = useCallback(
     (event: React.TouchEvent) => {
-      const vp = context.viewPort
-
       const width = noteRef.current!.getBoundingClientRect().left
       const height = noteRef.current!.getBoundingClientRect().top
       const resize = (pageX: number, pageY: number) => {
-        if ( (pageX - width) / vp.zoomFactor > noteMinSize.width)
-          noteRef.current!.style.width = (pageX - width) / vp.zoomFactor + "px"
-        if ((pageY - height) / vp.zoomFactor > noteMinSize.height)
-          noteRef.current!.style.height = (pageY - height) / vp.zoomFactor  + "px"
+        if ( (pageX - width) / spaceData.zoomFactor > noteMinSize.width)
+          noteRef.current!.style.width = (pageX - width) / spaceData.zoomFactor + "px"
+        if ((pageY - height) / spaceData.zoomFactor > noteMinSize.height)
+          noteRef.current!.style.height = (pageY - height) / spaceData.zoomFactor  + "px"
       }
 
       resize(event.touches[0].pageX, event.touches[0].pageY)
@@ -208,7 +201,7 @@ const StickyNote = ({ note, spaceData}: { note: NoteData,  spaceData: VpData}) =
         dispatch(setNoteData(newNote))
       }
     },
-    [noteChanges]
+    [noteChanges, spaceData]
   )
 
   const handleColorChange = useCallback(
