@@ -1,4 +1,4 @@
-import { VpData } from "src/types"
+import { VpData, SpaceData } from "src/types"
 
 export const saveSpaceData = async (spaceData: VpData) => {
   return new Promise<VpData>((resolve) => {
@@ -8,10 +8,24 @@ export const saveSpaceData = async (spaceData: VpData) => {
 }
 
 export const getSpaceData = async () => {
-  return new Promise<VpData>((resolve) => {
+  return new Promise<SpaceData>((resolve) => {
     const spaceData: VpData = JSON.parse(
       localStorage.getItem("spaceData") || "{xCord: 0, yCord: 0, zoomFactor: 1,}"   //doesnt return object if empty
     )
-    resolve(spaceData)
+    const mode: number = JSON.parse(
+      localStorage.getItem("mode") || "0"   //doesnt return object if empty
+    )
+    const newSpaceData: SpaceData = {
+      vpData : spaceData,
+      mode: mode
+    }
+    resolve(newSpaceData)
+  })
+}
+
+export const changeMode = async (mode: number) => {
+  return new Promise<number>((resolve) => {
+    localStorage.setItem("mode", JSON.stringify(mode))
+    resolve(mode)
   })
 }

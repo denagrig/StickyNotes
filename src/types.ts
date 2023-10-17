@@ -14,9 +14,14 @@ type VpData = {
     zoomFactor: number
 }
 
+type SpaceData = {
+    vpData: VpData,
+    mode: number
+}
+
 type CordsPair = {
     xCord: number
     yCord: number
 }
 
-export type {NoteData, VpData, CordsPair}
+export type {NoteData, VpData, CordsPair, SpaceData}

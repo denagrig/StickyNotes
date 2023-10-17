@@ -1,45 +1,21 @@
-import { useRef, useState } from "react"
+import { useRef } from "react"
 import { useDispatch } from "react-redux"
-import { AddButton, Buttons, ClearButton } from "src/components/PageHeader/PageHeader.styled"
-import { useAppSelector } from "src/hooks"
-import { addNote, clearNotes } from "src/slices/noteSlice"
+import { LeftButtons, Buttons, ClearButton } from "src/components/PageHeader/PageHeader.styled"
+import { Mode } from "src/data"
+import { clearNotes } from "src/slices/noteSlice"
+import { setMode } from "src/slices/spaceSlice"
 import { AppDispatch } from "src/store"
-import { CordsPair, VpData } from "src/types"
 
 const PageHeader = () => {
   const dispatch = useDispatch<AppDispatch>()
   const addButtonRef = useRef<HTMLButtonElement>(null)
-  const spaceData: VpData = useAppSelector((state) => state.space.spaceData)
-  const [canAddNote, setCanAddNote] = useState<boolean>(false)
 
-  const createNoteAtCords = (noteX: number, noteY: number) => {
-    const createCords: CordsPair = {
-      xCord: noteX + spaceData.xCord,
-      yCord: noteY + spaceData.yCord,
-    }
-    dispatch(addNote(createCords))
+  const enableMovement = () => {
+    dispatch(setMode(Mode.Move))
   }
 
-
-  const onClick = (event: MouseEvent) => {
-    const element = event.target as HTMLElement   
-    createNoteAtCords(event.pageX, event.pageY)
-    console.log("el:",element.className)
-  }
-
-
-  const handleAddNote = () => {
-   
-    if(canAddNote == false)
-    {
-      setCanAddNote(true) 
-      document.addEventListener("click", onClick)
-    }
-    else
-    {
-      setCanAddNote(false)
-      document.removeEventListener("click", onClick)
-    } 
+  const enableAddNote = () => {
+    dispatch(setMode(Mode.Add))
   }
 
   const handleClear = () => {
@@ -48,9 +24,12 @@ const PageHeader = () => {
 
   return (
     <Buttons>
-      <AddButton onClick={handleAddNote} ref={addButtonRef}>
+      <LeftButtons onClick={enableAddNote} ref={addButtonRef}>
         Добавить Заметку
-      </AddButton>
+      </LeftButtons>
+      <LeftButtons onClick={enableMovement}>
+        Режим перемещения
+      </LeftButtons>
       <ClearButton onClick= {handleClear}>
         Очистить
       </ClearButton>

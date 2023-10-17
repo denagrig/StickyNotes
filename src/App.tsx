@@ -14,7 +14,7 @@ const App = () => {
     dispatch(loadSpaceData())
   }, [])
 
-  const spaceData: CordsPair = useAppSelector((state) => state.space.spaceData)
+  const spaceData: CordsPair = useAppSelector((state) => state.space.vpData)
 
   if(spaceData.xCord != -1)
   {

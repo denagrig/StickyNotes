@@ -4,8 +4,7 @@ export const Buttons = styled.div`
   z-index: 2;
 `
 
-export const AddButton = styled.button`
-  left: 0;
+export const LeftButtons = styled.button`
   padding: 10px;
   background: #ededed;
   color: black;
@@ -15,6 +14,7 @@ export const AddButton = styled.button`
   position: relative;
   box-shadow: 0px 0px 5px #c1c1c1;
   border: 1px solid black;
+  margin-right: 20px;
 `
 
 export const ClearButton = styled.button`

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { VpData } from "src/types"
-import { getSpaceData, saveSpaceData } from "src/slices/spaceLocalStorage"
+import { SpaceData, VpData } from "src/types"
+import { changeMode, getSpaceData, saveSpaceData } from "src/slices/spaceLocalStorage"
+import { Mode } from "src/data"
 
 export const setSpaceData = createAsyncThunk<VpData, VpData>(
   "spaceSlice/setSpaceData",
@@ -13,7 +14,7 @@ export const setSpaceData = createAsyncThunk<VpData, VpData>(
   }
 )
 
-export const loadSpaceData = createAsyncThunk<VpData, void>(
+export const loadSpaceData = createAsyncThunk<SpaceData, void>(
   "spaceSlice/loadSpaceData",
   async (params: void, thunkAPI) => {
     try {
@@ -24,16 +25,30 @@ export const loadSpaceData = createAsyncThunk<VpData, void>(
   }
 )
 
+export const setMode = createAsyncThunk<number, number>(
+  "spaceSlice/setMode",
+  async (mode: number, thunkAPI) => {
+    try {
+      return await changeMode(mode)
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e)
+    }
+  }
+)
+
+
 export interface SpaceState {
-  spaceData: VpData
+  vpData: VpData
+  mode: Mode
 }
   
 const initialState: SpaceState = {
-  spaceData: {
+  vpData: {
     xCord: -1, 
     yCord: -1,
     zoomFactor: 1,
-  }
+  },
+  mode: Mode.Add
 }
   
 const spaceSlice = createSlice({
@@ -42,10 +57,14 @@ const spaceSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(setSpaceData.fulfilled, (state, action) => {
-      state.spaceData = action.payload
+      state.vpData = action.payload
     }),
     builder.addCase(loadSpaceData.fulfilled, (state, action) => {
-      state.spaceData = action.payload
+      state.vpData = action.payload.vpData
+      state.mode = action.payload.mode
+    })
+    builder.addCase(setMode.fulfilled, (state, action) => {
+      state.mode = action.payload
     })
   },
 })
