@@ -23,6 +23,6 @@
         "noUnusedParameters": false,
         "noFallthroughCasesInSwitch": true
       },
-    "include": ["src", "index.tsx"],
+    "include": ["src", "src/index.tsx.tsx"],
     "exclude": ["node_modules"]
 }
