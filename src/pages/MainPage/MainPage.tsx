@@ -8,7 +8,7 @@ import { BackgroundImg } from "./MainPage.styled"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "src/store"
 import { setSpaceData } from "src/slices/spaceSlice"
-import React, { useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 import { Mode } from "src/data"
 import { addNote } from "src/slices/noteSlice"
 
@@ -21,20 +21,35 @@ const MainPage = () => {
   const spaceRef = React.useRef<Space | null>(null)
   const spaceContainer = React.useRef<HTMLDivElement | null>(null)
 
+  const handleAddNote = useCallback((event : MouseEvent) => {
+    if(mode == Mode.Add) {
+      const createCords: CordsPair = {
+        xCord: event.pageX + spaceData.xCord,
+        yCord: event.pageY + spaceData.yCord,
+      }
+      dispatch(addNote(createCords))
+    }
+  },[mode, dispatch, spaceData.xCord, spaceData.yCord])
+
+
   useEffect(() => {
+    const currentSpace = spaceContainer.current
     if (mode == Mode.Move) {
-      spaceRef.current?.viewPort?.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] })
+      currentSpace?.removeEventListener("click", handleAddNote)
+      spaceRef.current?.viewPort?.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [1, 1] })
     } else {
       spaceRef.current?.viewPort?.setBounds({ x: [spaceData.xCord, spaceData.xCord + window.screen.width], 
         y: [spaceData.yCord, spaceData.yCord + window.screen.height], 
         zoom: [spaceData.zoomFactor, spaceData.zoomFactor] })
+      currentSpace?.addEventListener("click", handleAddNote)
     }
-  }, [mode, spaceData])
+    return () => {currentSpace?.removeEventListener("click", handleAddNote)}
+  }, [mode, spaceData, handleAddNote])
 
   const updateCords = () => {
     const newSpaceData: VpData = {
-      xCord: spaceRef.current?.viewPort?.left as number,
-      yCord: spaceRef.current?.viewPort?.top as number,
+      xCord: spaceRef.current?.viewPort?.left || 0,
+      yCord: spaceRef.current?.viewPort?.top || 0,
       zoomFactor: 1,
       //zoomFactor: spaceData.zoomFactor
     }
@@ -52,24 +67,6 @@ const MainPage = () => {
   }
 
   //document.addEventListener("wheel", updateZoom)
-
-
-  const createNoteAtCords = (noteX: number, noteY: number) => {
-    const createCords: CordsPair = {
-      xCord: noteX + spaceData.xCord,
-      yCord: noteY + spaceData.yCord,
-    }
-    dispatch(addNote(createCords))
-  }
-
-
-  const handleAddNote = (event : MouseEvent) => {
-    if(mode == Mode.Add) {
-      createNoteAtCords(event.pageX, event.pageY)
-    }
-  }
-
-  spaceContainer.current?.addEventListener("click", handleAddNote)
 
   return (
     <div onMouseUp={() => updateCords()} onWheel={() => updateZoom}>

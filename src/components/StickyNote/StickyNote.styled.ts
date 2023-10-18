@@ -20,6 +20,9 @@ export const MovableHeader = styled.div`
   padding: 0 0 10px 0;
   width: 100%;
   cursor: grab;
+  @media (max-width: 1200px) {
+    height: 35px;
+  }
 `
 
 export const TextArea = styled.textarea`

@@ -9,15 +9,14 @@ export const saveSpaceData = async (spaceData: VpData) => {
 
 export const getSpaceData = async () => {
   return new Promise<SpaceData>((resolve) => {
-    const spaceData: VpData = JSON.parse(
-      localStorage.getItem("spaceData") || "{xCord: 0, yCord: 0, zoomFactor: 1,}"   //doesnt return object if empty
-    )
-    const mode: number = JSON.parse(
-      localStorage.getItem("mode") || "0"   //doesnt return object if empty
-    )
+    const spaceDataFromLocalStorage = localStorage.getItem("spaceData")
+    const spaceData: VpData = spaceDataFromLocalStorage
+      ? JSON.parse(spaceDataFromLocalStorage)
+      : { xCord: 0, yCord: 0, zoomFactor: 1 }
+    const mode: number = JSON.parse(localStorage.getItem("mode") || "0")
     const newSpaceData: SpaceData = {
-      vpData : spaceData,
-      mode: mode
+      vpData: spaceData,
+      mode: mode,
     }
     resolve(newSpaceData)
   })

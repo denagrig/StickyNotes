@@ -10,9 +10,9 @@ import {
 
 export const setNoteData = createAsyncThunk<NoteData[], NoteData>(
   "noteSlice/setNoteData",
-  async (NoteData: NoteData, thunkAPI) => {
+  async (noteData: NoteData, thunkAPI) => {
     try {
-      return await saveNote(NoteData)
+      return await saveNote(noteData)
     } catch (e) {
       return thunkAPI.rejectWithValue(e)
     }

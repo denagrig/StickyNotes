@@ -12,7 +12,7 @@ const App = () => {
   useEffect(() => {
     dispatch(loadNoteData())
     dispatch(loadSpaceData())
-  }, [])
+  }, [dispatch])
 
   const spaceData: CordsPair = useAppSelector((state) => state.space.vpData)
 

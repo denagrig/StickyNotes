@@ -1,11 +1,11 @@
 import { CordsPair, NoteData } from "src/types"
 
-export const saveNote = async (NoteData: NoteData) => {
+export const saveNote = async (noteData: NoteData) => {
   return new Promise<NoteData[]>((resolve) => {
     const notesRecord: NoteData[] = JSON.parse(
       localStorage.getItem("notesRecord") || "[]"
     )
-    const id = NoteData.id
+    const id = noteData.id
     let notePlace = 0
     let curNote = 0
     notesRecord.map((note) => {
@@ -14,20 +14,20 @@ export const saveNote = async (NoteData: NoteData) => {
       }
       curNote++
     })
-    notesRecord[notePlace] = NoteData
+    notesRecord[notePlace] = noteData
+    console.log("saved notes")
     localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
     resolve(notesRecord)
-    return notesRecord
   })
 }
 
 export const loadNotes = async () => {
-  return new Promise<NoteData[]>((resolve) => {
+  return new Promise<NoteData[]>((resolve) => {  
     const notesRecord: NoteData[] = JSON.parse(
       localStorage.getItem("notesRecord") || "[]"
     )
+    console.log("loaded notes")
     resolve(notesRecord)
-    return notesRecord
   })
 }
 
@@ -36,6 +36,7 @@ export const pushNote = async (cords: CordsPair) => {
     const notesRecord: NoteData[] = JSON.parse(
       localStorage.getItem("notesRecord") || "[]"
     )
+
     let notesId: number = JSON.parse(
       localStorage.getItem("notesID") || "0"
     )
@@ -47,13 +48,13 @@ export const pushNote = async (cords: CordsPair) => {
       width: "300px",
       text: "",
       color: "lightgreen",
-    }
+    }  
+    console.log("note pushed")
     notesRecord.push(newNote)
     notesId++
     localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
     localStorage.setItem("notesID", JSON.stringify(notesId))
     resolve(notesRecord)
-    return notesRecord
   })
 }
 
@@ -73,15 +74,13 @@ export const popNote = async (id: number) => {
     notesRecord.splice(splicePos, 1)
     localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
     resolve(notesRecord)
-    return notesRecord
   })
 }
 
 export const clearAllNotes = async () => {
   return new Promise<NoteData[]>((resolve) => {
-    const notesRecord: NoteData[] = []
-    localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
-    resolve(notesRecord)
-    return notesRecord
+    localStorage.removeItem("notesRecord")
+    console.log("note cleared")
+    resolve([])
   })
 }

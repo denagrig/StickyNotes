@@ -114,7 +114,7 @@ const StickyNote = ({note}: { note: NoteData}) => {
         dispatch(setNoteData(newNote))
       }
     },
-    [noteChanges, spaceData]
+    [noteChanges, spaceData, dispatch, context.viewPort]
   )
 
   const handleTextChange = useCallback(
@@ -124,7 +124,7 @@ const StickyNote = ({note}: { note: NoteData}) => {
       setNoteChanges(newNote)
       dispatch(setNoteData(newNote))
     },
-    [noteChanges]
+    [noteChanges, dispatch]
   )
 
   const handleDelete = () => {
@@ -180,7 +180,7 @@ const StickyNote = ({note}: { note: NoteData}) => {
         dispatch(setNoteData(newNote))
       }
     },
-    [noteChanges, spaceData]
+    [noteChanges, spaceData, dispatch]
   )
 
   const handleColorChange = useCallback(
@@ -190,7 +190,7 @@ const StickyNote = ({note}: { note: NoteData}) => {
       setNoteChanges(newNote)
       dispatch(setNoteData(newNote))
     },
-    [noteChanges]
+    [noteChanges, dispatch]
   )
 
   return (
