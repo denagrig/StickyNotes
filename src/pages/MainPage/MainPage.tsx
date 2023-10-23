@@ -69,7 +69,7 @@ const MainPage = () => {
   //document.addEventListener("wheel", updateZoom)
 
   return (
-    <div onMouseUp={() => updateCords()} onWheel={() => updateZoom}>
+    <div onMouseUp={() => updateCords()} onTouchEnd={() => updateCords()}  onWheel={() => updateZoom}>
       <div ref={spaceContainer}>
         <Space
           onCreate={(vp) => {
