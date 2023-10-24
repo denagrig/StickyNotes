@@ -21,29 +21,39 @@ const MainPage = () => {
   const spaceRef = React.useRef<Space | null>(null)
   const spaceContainer = React.useRef<HTMLDivElement | null>(null)
 
-  const handleAddNote = useCallback((event : MouseEvent) => {
-    if(mode == Mode.Add) {
-      const createCords: CordsPair = {
-        xCord: event.pageX + spaceData.xCord,
-        yCord: event.pageY + spaceData.yCord,
+  const handleAddNote = useCallback(
+    (event: MouseEvent) => {
+      if (mode == Mode.Add) {
+        const createCords: CordsPair = {
+          xCord: event.pageX + spaceData.xCord,
+          yCord: event.pageY + spaceData.yCord,
+        }
+        dispatch(addNote(createCords))
       }
-      dispatch(addNote(createCords))
-    }
-  },[mode, dispatch, spaceData.xCord, spaceData.yCord])
-
+    },
+    [mode, dispatch, spaceData.xCord, spaceData.yCord]
+  )
 
   useEffect(() => {
     const currentSpace = spaceContainer.current
     if (mode == Mode.Move) {
       currentSpace?.removeEventListener("click", handleAddNote)
-      spaceRef.current?.viewPort?.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [1, 1] })
+      spaceRef.current?.viewPort?.setBounds({
+        x: [0, 10000],
+        y: [0, 10000],
+        zoom: [1, 1],
+      })
     } else {
-      spaceRef.current?.viewPort?.setBounds({ x: [spaceData.xCord, spaceData.xCord + window.screen.width], 
-        y: [spaceData.yCord, spaceData.yCord + window.screen.height], 
-        zoom: [spaceData.zoomFactor, spaceData.zoomFactor] })
+      spaceRef.current?.viewPort?.setBounds({
+        x: [spaceData.xCord, spaceData.xCord + window.screen.width],
+        y: [spaceData.yCord, spaceData.yCord + window.screen.height],
+        zoom: [spaceData.zoomFactor, spaceData.zoomFactor],
+      })
       currentSpace?.addEventListener("click", handleAddNote)
     }
-    return () => {currentSpace?.removeEventListener("click", handleAddNote)}
+    return () => {
+      currentSpace?.removeEventListener("click", handleAddNote)
+    }
   }, [mode, spaceData, handleAddNote])
 
   const updateCords = () => {
@@ -69,7 +79,11 @@ const MainPage = () => {
   //document.addEventListener("wheel", updateZoom)
 
   return (
-    <div onMouseUp={() => updateCords()} onTouchEnd={() => updateCords()}  onWheel={() => updateZoom}>
+    <div
+      onMouseUp={() => updateCords()}
+      onTouchEnd={() => updateCords()}
+      onWheel={() => updateZoom}
+    >
       <div ref={spaceContainer}>
         <Space
           onCreate={(vp) => {

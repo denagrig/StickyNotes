@@ -22,7 +22,7 @@ export const saveNote = async (noteData: NoteData) => {
 }
 
 export const loadNotes = async () => {
-  return new Promise<NoteData[]>((resolve) => {  
+  return new Promise<NoteData[]>((resolve) => {
     const notesRecord: NoteData[] = JSON.parse(
       localStorage.getItem("notesRecord") || "[]"
     )
@@ -37,9 +37,7 @@ export const pushNote = async (cords: CordsPair) => {
       localStorage.getItem("notesRecord") || "[]"
     )
 
-    let notesId: number = JSON.parse(
-      localStorage.getItem("notesID") || "0"
-    )
+    let notesId: number = JSON.parse(localStorage.getItem("notesID") || "0")
     const newNote: NoteData = {
       id: notesId,
       xCord: cords.xCord + "px",
@@ -48,7 +46,7 @@ export const pushNote = async (cords: CordsPair) => {
       width: "300px",
       text: "",
       color: "lightgreen",
-    }  
+    }
     console.log("note pushed")
     notesRecord.push(newNote)
     notesId++

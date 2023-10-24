@@ -1,6 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { SpaceData, VpData } from "src/types"
-import { changeMode, getSpaceData, saveSpaceData } from "src/slices/spaceLocalStorage"
+import {
+  changeMode,
+  getSpaceData,
+  saveSpaceData,
+} from "src/slices/spaceLocalStorage"
 import { Mode } from "src/data"
 
 export const setSpaceData = createAsyncThunk<VpData, VpData>(
@@ -36,21 +40,20 @@ export const setMode = createAsyncThunk<number, number>(
   }
 )
 
-
 export interface SpaceState {
-  vpData: VpData
-  mode: Mode
+  vpData: VpData;
+  mode: Mode;
 }
-  
+
 const initialState: SpaceState = {
   vpData: {
-    xCord: -1, 
+    xCord: -1,
     yCord: -1,
     zoomFactor: 1,
   },
-  mode: Mode.Add
+  mode: Mode.Add,
 }
-  
+
 const spaceSlice = createSlice({
   name: "spaceSlice",
   initialState,
@@ -68,6 +71,5 @@ const spaceSlice = createSlice({
     })
   },
 })
-  
+
 export default spaceSlice.reducer
-  

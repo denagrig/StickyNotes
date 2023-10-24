@@ -1,6 +1,10 @@
 import { useRef } from "react"
 import { useDispatch } from "react-redux"
-import { LeftButtons, Buttons, ClearButton } from "src/components/PageHeader/PageHeader.styled"
+import {
+  LeftButtons,
+  Buttons,
+  ClearButton,
+} from "src/components/PageHeader/PageHeader.styled"
 import { Mode } from "src/data"
 import { clearNotes } from "src/slices/noteSlice"
 import { setMode } from "src/slices/spaceSlice"
@@ -27,12 +31,8 @@ const PageHeader = () => {
       <LeftButtons onClick={enableAddNote} ref={addButtonRef}>
         Добавить Заметку
       </LeftButtons>
-      <LeftButtons onClick={enableMovement}>
-        Режим перемещения
-      </LeftButtons>
-      <ClearButton onClick= {handleClear}>
-        Очистить
-      </ClearButton>
+      <LeftButtons onClick={enableMovement}>Режим перемещения</LeftButtons>
+      <ClearButton onClick={handleClear}>Очистить</ClearButton>
     </Buttons>
   )
 }
