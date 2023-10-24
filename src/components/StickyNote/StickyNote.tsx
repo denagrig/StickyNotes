@@ -9,6 +9,7 @@ import {
   ChangeColorContainer,
   ChangeColorInput,
   BrushIcon,
+  TextAreaContainer,
 } from "src/components/StickyNote/StickyNote.styled"
 import { deleteNote, setNoteData } from "src/slices/noteSlice"
 import { AppDispatch } from "src/store"
@@ -229,7 +230,9 @@ const StickyNote = ({ note }: { note: NoteData }) => {
           <FontAwesomeIcon icon={faMinus} />
         </DeleteButton>
       </Header>
-      <TextArea defaultValue={note.text} onChange={handleTextChange} />
+      <TextAreaContainer>
+        <TextArea defaultValue={note.text} onChange={handleTextChange} />
+      </TextAreaContainer>
       <Resize
         onMouseDown={resizePressStart}
         onTouchStart={resizePressStart}

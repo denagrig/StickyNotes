@@ -31,6 +31,9 @@ export const MovableHeader = styled.div`
   }
 `
 
+export const TextAreaContainer = styled.div`
+`
+
 export const TextArea = styled.textarea`
   width: 100%;
   height: 80%;

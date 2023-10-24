@@ -9,3 +9,8 @@ export const BackgroundImg = styled.div`
   width: 10000px;
   height: 10000px;
 `
+export const MainPageContainer = styled.div`
+`
+
+export const SpaceContainer = styled.div`
+`

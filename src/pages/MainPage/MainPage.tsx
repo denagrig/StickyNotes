@@ -4,7 +4,7 @@ import { CordsPair, NoteData, VpData } from "src/types"
 import "@melloware/coloris/dist/coloris.css"
 import { NoPanArea, Space } from "react-zoomable-ui"
 import PageHeader from "src/components/PageHeader/PageHeader"
-import { BackgroundImg } from "./MainPage.styled"
+import { BackgroundImg, MainPageContainer, SpaceContainer } from "./MainPage.styled"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "src/store"
 import { setSpaceData } from "src/slices/spaceSlice"
@@ -79,12 +79,12 @@ const MainPage = () => {
   //document.addEventListener("wheel", updateZoom)
 
   return (
-    <div
+    <MainPageContainer
       onMouseUp={() => updateCords()}
       onTouchEnd={() => updateCords()}
       onWheel={() => updateZoom}
     >
-      <div ref={spaceContainer}>
+      <SpaceContainer ref={spaceContainer}>
         <Space
           onCreate={(vp) => {
             vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] })
@@ -104,9 +104,9 @@ const MainPage = () => {
             </NoPanArea>
           </BackgroundImg>
         </Space>
-      </div>
+      </SpaceContainer>
       <PageHeader />
-    </div>
+    </MainPageContainer>
   )
 }
 
