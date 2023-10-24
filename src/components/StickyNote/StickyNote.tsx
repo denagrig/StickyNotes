@@ -26,8 +26,19 @@ const StickyNote = ({ note }: { note: NoteData }) => {
   const noteRef = useRef<HTMLHeadingElement>(null)
   const dispatch = useDispatch<AppDispatch>()
   const spaceData: VpData = useAppSelector((state) => state.space.vpData)
-  //const [shiftCords, setShiftCords] = useState<CordsPair>({xCord: 0, yCord: 0})
-  const shiftRef = React.useRef<CordsPair>({ xCord: 0, yCord: 0 })
+  const shiftRef = React.useRef<CordsPair>({
+    xCord: 0,
+    yCord: 0,
+  })
+  const noteChangesRef = useRef<NoteData>({
+    id: note.id,
+    xCord: note.xCord,
+    yCord: note.yCord,
+    height: note.height,
+    width: note.width,
+    text: note.text,
+    color: note.color,
+  })
 
   Coloris.init()
   Coloris.coloris({
@@ -48,23 +59,10 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     ],
   })
 
-  const noteChangesRef = useRef<NoteData>({
-    id: note.id,
-    xCord: note.xCord,
-    yCord: note.yCord,
-    height: note.height,
-    width: note.width,
-    text: note.text,
-    color: note.color,
-  })
-
-  const moveAt = useCallback(
-    (pageX: number, pageY: number) => {
-      noteRef.current!.style.left = pageX - shiftRef.current.xCord + "px"
-      noteRef.current!.style.top = pageY - shiftRef.current.yCord + "px"
-    },
-    [shiftRef]
-  )
+  const moveAt = useCallback((pageX: number, pageY: number) => {
+    noteRef.current!.style.left = pageX - shiftRef.current.xCord + "px"
+    noteRef.current!.style.top = pageY - shiftRef.current.yCord + "px"
+  }, [])
 
   const onMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
@@ -129,53 +127,70 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     dispatch(deleteNote(note.id))
   }
 
-  const handleResize = useCallback(
-    (event: React.MouseEvent | React.TouchEvent) => {
+  const resize = useCallback(
+    (pageX: number, pageY: number) => {
       const width = noteRef.current!.getBoundingClientRect().left
       const height = noteRef.current!.getBoundingClientRect().top
-      let processedEvent
+      if ((pageX - width) / spaceData.zoomFactor > noteMinSize.width)
+        noteRef.current!.style.width =
+          (pageX - width) / spaceData.zoomFactor + "px"
+      if ((pageY - height) / spaceData.zoomFactor > noteMinSize.height)
+        noteRef.current!.style.height =
+          (pageY - height) / spaceData.zoomFactor + "px"
+    },
+    [spaceData.zoomFactor]
+  )
 
-      const onMouseMove = (event: MouseEvent) => {
+  const onResize = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      if ("touches" in event) {
+        resize(event.touches[0].pageX, event.touches[0].pageY)
+      } else {
         resize(event.pageX, event.pageY)
       }
+    },
+    [resize]
+  )
 
-      const onTouchMove = (event: TouchEvent) => {
-        resize(event.touches[0].pageX, event.touches[0].pageY)
-      }
+  const resizePressStart = useCallback(
+    (event: React.MouseEvent | React.TouchEvent) => {
+      let processedEvent
 
       if ("touches" in event) {
         processedEvent = event.touches[0]
-        document.addEventListener("touchmove", onTouchMove)
+        document.addEventListener("touchmove", onResize)
       } else {
         processedEvent = event
-        document.addEventListener("mousemove", onMouseMove)
+        document.addEventListener("mousemove", onResize)
       }
-      const resize = (pageX: number, pageY: number) => {
-        if ((pageX - width) / spaceData.zoomFactor > noteMinSize.width)
-          noteRef.current!.style.width =
-            (pageX - width) / spaceData.zoomFactor + "px"
-        if ((pageY - height) / spaceData.zoomFactor > noteMinSize.height)
-          noteRef.current!.style.height =
-            (pageY - height) / spaceData.zoomFactor + "px"
-      }
+
+      shiftRef.current.xCord =
+        processedEvent.clientX -
+        noteRef.current!.getBoundingClientRect().left -
+        spaceData.xCord
+      shiftRef.current.yCord =
+        processedEvent.clientY -
+        noteRef.current!.getBoundingClientRect().top -
+        spaceData.yCord
 
       resize(processedEvent.pageX, processedEvent.pageY)
-
-      noteRef.current!.onmouseup = () => {
-        document.removeEventListener("mousemove", onMouseMove)
-        noteChangesRef.current.height = noteRef.current!.style.height
-        noteChangesRef.current.width = noteRef.current!.style.width
-        dispatch(setNoteData(noteChangesRef.current))
-      }
-
-      noteRef.current!.ontouchend = () => {
-        document.removeEventListener("touchmove", onTouchMove)
-        noteChangesRef.current.height = noteRef.current!.style.height
-        noteChangesRef.current.width = noteRef.current!.style.width
-        dispatch(setNoteData(noteChangesRef.current))
-      }
     },
-    [spaceData, dispatch]
+    [onResize, resize, spaceData]
+  )
+
+  const resizePressEnd = useCallback(
+    (event: React.MouseEvent | React.TouchEvent) => {
+      if ("touches" in event) {
+        document.removeEventListener("touchmove", onResize)
+      } else {
+        document.removeEventListener("mousemove", onResize)
+      }
+
+      noteChangesRef.current.height = noteRef.current!.style.height
+      noteChangesRef.current.width = noteRef.current!.style.width
+      dispatch(setNoteData(noteChangesRef.current))
+    },
+    [dispatch, onResize]
   )
 
   const handleColorChange = useCallback(
@@ -215,7 +230,12 @@ const StickyNote = ({ note }: { note: NoteData }) => {
         </DeleteButton>
       </Header>
       <TextArea defaultValue={note.text} onChange={handleTextChange} />
-      <Resize onMouseDown={handleResize} onTouchStart={handleResize} />
+      <Resize
+        onMouseDown={resizePressStart}
+        onTouchStart={resizePressStart}
+        onMouseUp={resizePressEnd}
+        onTouchEnd={resizePressEnd}
+      />
     </Container>
   )
 }
