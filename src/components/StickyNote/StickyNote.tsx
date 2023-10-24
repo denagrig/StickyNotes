@@ -10,6 +10,7 @@ import {
   ChangeColorInput,
   BrushIcon,
   TextAreaContainer,
+  DeleteIcon
 } from "src/components/StickyNote/StickyNote.styled"
 import { deleteNote, setNoteData } from "src/slices/noteSlice"
 import { AppDispatch } from "src/store"
@@ -19,7 +20,6 @@ import { noteMinSize } from "src/data"
 import { faMinus, faPaintBrush } from "@fortawesome/free-solid-svg-icons"
 import "@melloware/coloris/dist/coloris.css"
 import Coloris from "@melloware/coloris"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { useAppSelector } from "src/hooks"
 
@@ -227,7 +227,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
           onTouchEnd={noteHeaderPressEnd}
         />
         <DeleteButton onClick={handleDelete}>
-          <FontAwesomeIcon icon={faMinus} />
+          <DeleteIcon icon={faMinus} />
         </DeleteButton>
       </Header>
       <TextAreaContainer>

@@ -26,7 +26,7 @@ export const MovableHeader = styled.div`
   padding: 0 0 10px 0;
   width: 100%;
   cursor: grab;
-  @media (max-width: 1200px) {
+  @media (max-width: 1024px) {
     height: 35px;
   }
 `
@@ -45,6 +45,9 @@ export const TextArea = styled.textarea`
   border: none;
   background: inherit;
   owerflow: auto;
+  @media (max-width: 1024px) {
+    font-size: 25px;
+  }
 `
 
 export const DeleteButton = styled.div`
@@ -60,6 +63,10 @@ export const DeleteButton = styled.div`
   line-height: 15px;
   font-size: 30px;
   cursor: pointer;
+  @media (max-width: 1024px) {
+    height: 35px;
+    width: 60px;
+  }
 `
 
 export const Header = styled.div`
@@ -76,6 +83,12 @@ export const Resize = styled.div`
   right: -5px;
   bottom: -5px;
   cursor: nwse-resize;
+  @media (max-width: 1024px) {
+    height: 20px;
+    width: 20px;
+    right: -10px;
+    bottom: -10px;
+  }
 `
 
 export const ChangeColorContainer = styled.div`
@@ -87,6 +100,10 @@ export const ChangeColorContainer = styled.div`
   width: 30px;
   line-height: 15px;
   font-size: 30px;
+  @media (max-width: 1024px) {
+    height: 35px;
+    width: 65px;
+  }
 `
 
 export const ChangeColorInput = styled.input`
@@ -103,4 +120,18 @@ export const BrushIcon = styled(FontAwesomeIcon)`
   top: 3px;
   left: 5px;
   pointer-events: none;
+  @media (max-width: 1024px) {
+    top: 8px;
+    left: 8px;
+    font-size: 1.8rem;
+  }
+`
+
+export const DeleteIcon = styled(FontAwesomeIcon)`
+  color: black;
+  position: relative;
+  @media (max-width: 1024px) {
+    top: 8px;
+    font-size: 2.5rem;
+  }
 `
