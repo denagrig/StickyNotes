@@ -4,7 +4,7 @@ import { CordsPair, NoteData, VpData } from "src/types"
 import "@melloware/coloris/dist/coloris.css"
 import { NoPanArea, Space } from "react-zoomable-ui"
 import PageHeader from "src/components/PageHeader/PageHeader"
-import { BackgroundImg, MainPageContainer, SpaceContainer } from "./MainPage.styled"
+import { BackgroundImg, MainPageContainer, NoPanContainer, SpaceContainer } from "src/pages/MainPage/MainPage.styled"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "src/store"
 import { setSpaceData } from "src/slices/spaceSlice"
@@ -19,16 +19,20 @@ const MainPage = () => {
   const mode: number = useAppSelector((state) => state.space.mode)
   const dispatch = useDispatch<AppDispatch>()
   const spaceRef = React.useRef<Space | null>(null)
+  const noPanRef = React.useRef<HTMLDivElement | null>(null)
   const spaceContainer = React.useRef<HTMLDivElement | null>(null)
 
   const handleAddNote = useCallback(
     (event: MouseEvent) => {
       if (mode == Mode.Add) {
-        const createCords: CordsPair = {
-          xCord: event.pageX + spaceData.xCord,
-          yCord: event.pageY + spaceData.yCord,
-        }
-        dispatch(addNote(createCords))
+        if(!noPanRef.current!.contains(event.target as Node))
+        {
+          const createCords: CordsPair = {
+            xCord: event.pageX + spaceData.xCord,
+            yCord: event.pageY + spaceData.yCord,
+          }
+          dispatch(addNote(createCords))
+        }   
       }
     },
     [mode, dispatch, spaceData.xCord, spaceData.yCord]
@@ -97,11 +101,13 @@ const MainPage = () => {
           ref={spaceRef}
         >
           <BackgroundImg $mode = {mode}>
-            <NoPanArea>
-              {notesData.map((note: NoteData) => (
-                <StickyNote note={note} noteCount={notesData.length} key={note.id} />
-              ))}
-            </NoPanArea>
+            <NoPanContainer ref={noPanRef}>
+              <NoPanArea>
+                {notesData.map((note: NoteData) => (
+                  <StickyNote note={note} noteCount={notesData.length} key={note.id} />
+                ))}
+              </NoPanArea>
+            </NoPanContainer>
           </BackgroundImg>
         </Space>
       </SpaceContainer>

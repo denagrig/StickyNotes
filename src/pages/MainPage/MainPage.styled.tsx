@@ -18,3 +18,6 @@ export const MainPageContainer = styled.div`
 
 export const SpaceContainer = styled.div`
 `
+
+export const NoPanContainer = styled.div`
+`

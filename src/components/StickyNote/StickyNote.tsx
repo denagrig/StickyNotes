@@ -27,7 +27,6 @@ const StickyNote = ({ note, noteCount }: { note: NoteData, noteCount: number }) 
   const noteRef = useRef<HTMLHeadingElement>(null)
   const dispatch = useDispatch<AppDispatch>()
   const spaceData: VpData = useAppSelector((state) => state.space.vpData)
-  const mode: number = useAppSelector((state) => state.space.mode)
   const shiftRef = React.useRef<CordsPair>({
     xCord: 0,
     yCord: 0,
@@ -222,7 +221,6 @@ const StickyNote = ({ note, noteCount }: { note: NoteData, noteCount: number }) 
       $height={note.height}
       $width={note.width}
       $color={note.color}
-      $isActive={mode}
       $zIndex={note.zIndex}
     >
       <Header>
