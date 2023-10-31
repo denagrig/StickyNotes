@@ -96,10 +96,10 @@ const MainPage = () => {
           }}
           ref={spaceRef}
         >
-          <BackgroundImg>
+          <BackgroundImg $mode = {mode}>
             <NoPanArea>
               {notesData.map((note: NoteData) => (
-                <StickyNote note={note} key={note.id} />
+                <StickyNote note={note} noteCount={notesData.length} key={note.id} />
               ))}
             </NoPanArea>
           </BackgroundImg>

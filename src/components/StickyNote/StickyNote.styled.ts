@@ -9,6 +9,7 @@ export const Container = styled.div<{
   $width?: string;
   $color?: string;
   $isActive?: Mode;
+  $zIndex?: number;
 }>`
   width: ${(props) => props.$width || "300px"};
   height: ${(props) => props.$height || "300px"};
@@ -18,6 +19,7 @@ export const Container = styled.div<{
   left: ${(props) => props.$left || "30px"};
   background: ${(props) => props.$color || "lightgreen"};
   pointer-events: ${(props) => props.$isActive === Mode.Move ? "all" : "none"};
+  z-index: ${(props) => (props.$zIndex+"") || "0"};
   display: inline-block;
   border-radius: 10px;
 `

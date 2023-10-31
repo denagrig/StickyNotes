@@ -12,7 +12,7 @@ import {
   TextAreaContainer,
   DeleteIcon
 } from "src/components/StickyNote/StickyNote.styled"
-import { deleteNote, setNoteData } from "src/slices/noteSlice"
+import { deleteNote, maxZIndex, setNoteData } from "src/slices/noteSlice"
 import { AppDispatch } from "src/store"
 import { useDispatch } from "react-redux"
 import { CordsPair, NoteData, VpData } from "src/types"
@@ -23,7 +23,7 @@ import Coloris from "@melloware/coloris"
 import React from "react"
 import { useAppSelector } from "src/hooks"
 
-const StickyNote = ({ note }: { note: NoteData }) => {
+const StickyNote = ({ note, noteCount }: { note: NoteData, noteCount: number }) => {
   const noteRef = useRef<HTMLHeadingElement>(null)
   const dispatch = useDispatch<AppDispatch>()
   const spaceData: VpData = useAppSelector((state) => state.space.vpData)
@@ -40,6 +40,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     width: note.width,
     text: note.text,
     color: note.color,
+    zIndex: note.zIndex
   })
 
   Coloris.init()
@@ -80,6 +81,8 @@ const StickyNote = ({ note }: { note: NoteData }) => {
   const noteHeaderPressStart = useCallback(
     (event: React.MouseEvent | React.TouchEvent) => {
       let processedEvent
+      dispatch(maxZIndex(note.id))
+      noteRef.current!.style.zIndex = noteCount + 1 + ""
       if ("touches" in event) {
         processedEvent = event.touches[0]
         document.addEventListener("touchmove", onMove)
@@ -99,23 +102,28 @@ const StickyNote = ({ note }: { note: NoteData }) => {
 
       moveAt(processedEvent.pageX, processedEvent.pageY)
     },
-    [moveAt, onMove, spaceData]
+    [dispatch, moveAt, note.id, onMove, spaceData, noteCount]
   )
 
   const noteHeaderPressEnd = useCallback(
     (event: React.MouseEvent | React.TouchEvent) => {
+      
       if ("touches" in event) {
         document.removeEventListener("touchmove", onMove)
       } else {
         document.removeEventListener("mousemove", onMove)
       }
+
+      noteRef.current!.style.zIndex = note.zIndex + ""
+      
       const newNote = Object.assign({}, noteChanges)
       newNote.xCord = noteRef.current!.style.left
       newNote.yCord = noteRef.current!.style.top
+      newNote.zIndex = note.zIndex
       setNoteChanges(newNote)
       dispatch(setNoteData(newNote))
     },
-    [dispatch, noteChanges, onMove]
+    [dispatch, noteChanges, onMove, note]
   )
 
   const handleTextChange = useCallback(
@@ -136,10 +144,10 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     (pageX: number, pageY: number) => {
       const width = noteRef.current!.getBoundingClientRect().left
       const height = noteRef.current!.getBoundingClientRect().top
-      if ((pageX - width) / spaceData.zoomFactor > noteMinSize.width)
+      if ((pageX - width) / spaceData.zoomFactor >= noteMinSize.width)
         noteRef.current!.style.width =
           (pageX - width) / spaceData.zoomFactor + "px"
-      if ((pageY - height) / spaceData.zoomFactor > noteMinSize.height)
+      if ((pageY - height) / spaceData.zoomFactor >= noteMinSize.height)
         noteRef.current!.style.height =
           (pageY - height) / spaceData.zoomFactor + "px"
     },
@@ -160,7 +168,6 @@ const StickyNote = ({ note }: { note: NoteData }) => {
   const resizePressStart = useCallback(
     (event: React.MouseEvent | React.TouchEvent) => {
       let processedEvent
-
       if ("touches" in event) {
         processedEvent = event.touches[0]
         document.addEventListener("touchmove", onResize)
@@ -177,10 +184,8 @@ const StickyNote = ({ note }: { note: NoteData }) => {
         processedEvent.clientY -
         noteRef.current!.getBoundingClientRect().top -
         spaceData.yCord
-
-      resize(processedEvent.pageX, processedEvent.pageY)
     },
-    [onResize, resize, spaceData]
+    [onResize, spaceData]
   )
 
   const resizePressEnd = useCallback(
@@ -218,6 +223,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
       $width={note.width}
       $color={note.color}
       $isActive={mode}
+      $zIndex={note.zIndex}
     >
       <Header>
         <ChangeColorContainer>

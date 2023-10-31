@@ -3,6 +3,7 @@ import { CordsPair, NoteData } from "src/types"
 import {
   clearAllNotes,
   loadNotes,
+  moveToTop,
   popNote,
   pushNote,
   saveNote,
@@ -63,6 +64,17 @@ export const clearNotes = createAsyncThunk<NoteData[], void>(
   }
 )
 
+export const maxZIndex = createAsyncThunk<NoteData[], number>(
+  "noteSlice/maxZIndex",
+  async (noteId: number, thunkAPI) => {
+    try {
+      return await moveToTop(noteId)
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e)
+    }
+  }
+)
+
 export interface NotesState {
   Notes: NoteData[];
 }
@@ -89,6 +101,9 @@ const noteSlice = createSlice({
       state.Notes = action.payload
     })
     builder.addCase(clearNotes.fulfilled, (state, action) => {
+      state.Notes = action.payload
+    })
+    builder.addCase(maxZIndex.fulfilled, (state, action) => {
       state.Notes = action.payload
     })
   },

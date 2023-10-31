@@ -6,6 +6,7 @@ type NoteData = {
     width: string
     text: string
     color: string
+    zIndex: number
 }
 
 type VpData = {
