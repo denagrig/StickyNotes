@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react"
+import { useCallback, useRef, useState } from "react"
 import {
   TextArea,
   Header,
@@ -27,11 +27,12 @@ const StickyNote = ({ note }: { note: NoteData }) => {
   const noteRef = useRef<HTMLHeadingElement>(null)
   const dispatch = useDispatch<AppDispatch>()
   const spaceData: VpData = useAppSelector((state) => state.space.vpData)
+  const mode: number = useAppSelector((state) => state.space.mode)
   const shiftRef = React.useRef<CordsPair>({
     xCord: 0,
     yCord: 0,
   })
-  const noteChangesRef = useRef<NoteData>({
+  const [noteChanges, setNoteChanges] = useState<NoteData>({
     id: note.id,
     xCord: note.xCord,
     yCord: note.yCord,
@@ -108,20 +109,23 @@ const StickyNote = ({ note }: { note: NoteData }) => {
       } else {
         document.removeEventListener("mousemove", onMove)
       }
-
-      noteChangesRef.current.xCord = noteRef.current!.style.left
-      noteChangesRef.current.yCord = noteRef.current!.style.top
-      dispatch(setNoteData(noteChangesRef.current))
+      const newNote = Object.assign({}, noteChanges)
+      newNote.xCord = noteRef.current!.style.left
+      newNote.yCord = noteRef.current!.style.top
+      setNoteChanges(newNote)
+      dispatch(setNoteData(newNote))
     },
-    [dispatch, onMove]
+    [dispatch, noteChanges, onMove]
   )
 
   const handleTextChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      noteChangesRef.current.text = event.target.value
-      dispatch(setNoteData(noteChangesRef.current))
+      const newNote = Object.assign({}, noteChanges)
+      newNote.text = event.target.value
+      setNoteChanges(newNote)
+      dispatch(setNoteData(newNote))
     },
-    [dispatch]
+    [dispatch, noteChanges]
   )
 
   const handleDelete = () => {
@@ -186,20 +190,23 @@ const StickyNote = ({ note }: { note: NoteData }) => {
       } else {
         document.removeEventListener("mousemove", onResize)
       }
-
-      noteChangesRef.current.height = noteRef.current!.style.height
-      noteChangesRef.current.width = noteRef.current!.style.width
-      dispatch(setNoteData(noteChangesRef.current))
+      const newNote = Object.assign({}, noteChanges)
+      newNote.height = noteRef.current!.style.height
+      newNote.width = noteRef.current!.style.width
+      setNoteChanges(newNote)
+      dispatch(setNoteData(newNote))
     },
-    [dispatch, onResize]
+    [dispatch, noteChanges, onResize]
   )
 
   const handleColorChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      noteChangesRef.current.color = event.target.value
-      dispatch(setNoteData(noteChangesRef.current))
+      const newNote = Object.assign({}, noteChanges)
+      newNote.color = event.target.value
+      setNoteChanges(newNote)
+      dispatch(setNoteData(newNote))
     },
-    [dispatch]
+    [dispatch, noteChanges]
   )
 
   return (
@@ -210,6 +217,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
       $height={note.height}
       $width={note.width}
       $color={note.color}
+      $isActive={mode}
     >
       <Header>
         <ChangeColorContainer>

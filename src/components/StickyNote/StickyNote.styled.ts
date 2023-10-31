@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { Mode } from "src/data"
 import styled from "styled-components"
 
 export const Container = styled.div<{
@@ -7,6 +8,7 @@ export const Container = styled.div<{
   $height?: string;
   $width?: string;
   $color?: string;
+  $isActive?: Mode;
 }>`
   width: ${(props) => props.$width || "300px"};
   height: ${(props) => props.$height || "300px"};
@@ -15,6 +17,7 @@ export const Container = styled.div<{
   top: ${(props) => props.$top || "30px"};
   left: ${(props) => props.$left || "30px"};
   background: ${(props) => props.$color || "lightgreen"};
+  pointer-events: ${(props) => props.$isActive === Mode.Move ? "all" : "none"};
   display: inline-block;
   border-radius: 10px;
 `

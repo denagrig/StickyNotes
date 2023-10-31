@@ -6,7 +6,8 @@ export const Buttons = styled.div`
 
 export const LeftButtons = styled.button`
   padding: 10px;
-  background: #ededed;
+  background: ${(props) =>
+    props.color === "grey" ? "#ededed" : "#add8e6"};
   color: black;
   border-radius: 10px;
   cursor: pointer;
@@ -27,7 +28,6 @@ export const LeftButtons = styled.button`
     text-align: center;
   }
 `
-
 export const ClearButton = styled.button`
   float: right;
   padding: 10px;

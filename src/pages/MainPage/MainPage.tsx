@@ -45,8 +45,8 @@ const MainPage = () => {
       })
     } else {
       spaceRef.current?.viewPort?.setBounds({
-        x: [spaceData.xCord, spaceData.xCord + window.screen.width],
-        y: [spaceData.yCord, spaceData.yCord + window.screen.height],
+        x: [spaceData.xCord, spaceData.xCord + window.innerWidth],
+        y: [spaceData.yCord, spaceData.yCord + window.innerHeight],
         zoom: [spaceData.zoomFactor, spaceData.zoomFactor],
       })
       currentSpace?.addEventListener("click", handleAddNote)
