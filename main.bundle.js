@@ -23345,12 +23345,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   TextAreaContainer: () => (/* binding */ TextAreaContainer)
 /* harmony export */ });
 /* harmony import */ var _fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @fortawesome/react-fontawesome */ "./node_modules/@fortawesome/react-fontawesome/index.es.js");
-/* harmony import */ var src_data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/data */ "./src/data.ts");
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js");
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js");
 
 
-
-const Container = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
+const Container = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
   width: ${(props) => props.$width || "300px"};
   height: ${(props) => props.$height || "300px"};
   border: 3px solid #333;
@@ -23358,12 +23356,11 @@ const Container = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div 
   top: ${(props) => props.$top || "30px"};
   left: ${(props) => props.$left || "30px"};
   background: ${(props) => props.$color || "lightgreen"};
-  pointer-events: ${(props) => props.$isActive === src_data__WEBPACK_IMPORTED_MODULE_1__.Mode.Move ? "all" : "none"};
   z-index: ${(props) => (props.$zIndex + "") || "0"};
   display: inline-block;
   border-radius: 10px;
 `;
-const MovableHeader = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
+const MovableHeader = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
   border-bottom: 2px solid #333;
   height: 15px;
   color: black;
@@ -23374,9 +23371,9 @@ const MovableHeader = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].
     height: 35px;
   }
 `;
-const TextAreaContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
+const TextAreaContainer = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
 `;
-const TextArea = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].textarea `
+const TextArea = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].textarea `
   width: 100%;
   height: 80%;
   box-sizing: border-box;
@@ -23391,7 +23388,7 @@ const TextArea = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].texta
     font-size: 25px;
   }
 `;
-const DeleteButton = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
+const DeleteButton = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
   border-bottom: 2px solid #333;
   border-left: 2px solid #333;
   height: 15px;
@@ -23409,10 +23406,10 @@ const DeleteButton = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].d
     width: 60px;
   }
 `;
-const Header = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
+const Header = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
   display: flex;
 `;
-const Resize = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
+const Resize = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -23429,7 +23426,7 @@ const Resize = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
     bottom: -10px;
   }
 `;
-const ChangeColorContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
+const ChangeColorContainer = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
   border-bottom: 2px solid #333;
   border-right: 2px solid #333;
   height: 15px;
@@ -23443,13 +23440,13 @@ const ChangeColorContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["def
     width: 65px;
   }
 `;
-const ChangeColorInput = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].input `
+const ChangeColorInput = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].input `
   width: 24px;
   position: relative;
   opacity: 0;
   cursor: pointer;
 `;
-const BrushIcon = (0,styled_components__WEBPACK_IMPORTED_MODULE_2__["default"])((0,_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_0__.FontAwesomeIcon)) `
+const BrushIcon = (0,styled_components__WEBPACK_IMPORTED_MODULE_1__["default"])((0,_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_0__.FontAwesomeIcon)) `
   color: black;
   font-size: 1.2rem;
   position: absolute;
@@ -23462,7 +23459,7 @@ const BrushIcon = (0,styled_components__WEBPACK_IMPORTED_MODULE_2__["default"])(
     font-size: 1.8rem;
   }
 `;
-const DeleteIcon = (0,styled_components__WEBPACK_IMPORTED_MODULE_2__["default"])((0,_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_0__.FontAwesomeIcon)) `
+const DeleteIcon = (0,styled_components__WEBPACK_IMPORTED_MODULE_1__["default"])((0,_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_0__.FontAwesomeIcon)) `
   color: black;
   position: relative;
   @media (max-width: 1024px) {
@@ -23511,7 +23508,6 @@ const StickyNote = ({ note, noteCount }) => {
     const noteRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
     const dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_4__.useDispatch)();
     const spaceData = (0,src_hooks__WEBPACK_IMPORTED_MODULE_8__.useAppSelector)((state) => state.space.vpData);
-    const mode = (0,src_hooks__WEBPACK_IMPORTED_MODULE_8__.useAppSelector)((state) => state.space.mode);
     const shiftRef = react__WEBPACK_IMPORTED_MODULE_1___default().useRef({
         xCord: 0,
         yCord: 0,
@@ -23658,7 +23654,7 @@ const StickyNote = ({ note, noteCount }) => {
         setNoteChanges(newNote);
         dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__.setNoteData)(newNote));
     }, [dispatch, noteChanges]);
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Container, { ref: noteRef, "$left": note.xCord, "$top": note.yCord, "$height": note.height, "$width": note.width, "$color": note.color, "$isActive": mode, "$zIndex": note.zIndex, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Header, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorContainer, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorInput, { type: "text", "data-coloris": true, onInput: handleColorChange }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.BrushIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faPaintBrush })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.MovableHeader, { onMouseDown: noteHeaderPressStart, onTouchStart: noteHeaderPressStart, onMouseUp: noteHeaderPressEnd, onTouchEnd: noteHeaderPressEnd }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteButton, { onClick: handleDelete, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faMinus }) })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextAreaContainer, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextArea, { defaultValue: note.text, onChange: handleTextChange }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Resize, { onMouseDown: resizePressStart, onTouchStart: resizePressStart, onMouseUp: resizePressEnd, onTouchEnd: resizePressEnd })] }));
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Container, { ref: noteRef, "$left": note.xCord, "$top": note.yCord, "$height": note.height, "$width": note.width, "$color": note.color, "$zIndex": note.zIndex, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Header, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorContainer, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorInput, { type: "text", "data-coloris": true, onInput: handleColorChange }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.BrushIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faPaintBrush })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.MovableHeader, { onMouseDown: noteHeaderPressStart, onTouchStart: noteHeaderPressStart, onMouseUp: noteHeaderPressEnd, onTouchEnd: noteHeaderPressEnd }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteButton, { onClick: handleDelete, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faMinus }) })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextAreaContainer, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextArea, { defaultValue: note.text, onChange: handleTextChange }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Resize, { onMouseDown: resizePressStart, onTouchStart: resizePressStart, onMouseUp: resizePressEnd, onTouchEnd: resizePressEnd })] }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (StickyNote);
 
@@ -23741,6 +23737,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   BackgroundImg: () => (/* binding */ BackgroundImg),
 /* harmony export */   MainPageContainer: () => (/* binding */ MainPageContainer),
+/* harmony export */   NoPanContainer: () => (/* binding */ NoPanContainer),
 /* harmony export */   SpaceContainer: () => (/* binding */ SpaceContainer)
 /* harmony export */ });
 /* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js");
@@ -23760,6 +23757,8 @@ const BackgroundImg = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].
 const MainPageContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
 `;
 const SpaceContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
+`;
+const NoPanContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
 `;
 
 
@@ -23783,7 +23782,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-zoomable-ui */ "./node_modules/react-zoomable-ui/dist/index.js");
 /* harmony import */ var react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var src_components_PageHeader_PageHeader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/components/PageHeader/PageHeader */ "./src/components/PageHeader/PageHeader.tsx");
-/* harmony import */ var _MainPage_styled__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./MainPage.styled */ "./src/pages/MainPage/MainPage.styled.tsx");
+/* harmony import */ var src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/pages/MainPage/MainPage.styled */ "./src/pages/MainPage/MainPage.styled.tsx");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/slices/spaceSlice */ "./src/slices/spaceSlice.ts");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
@@ -23809,14 +23808,17 @@ const MainPage = () => {
     const mode = (0,src_hooks__WEBPACK_IMPORTED_MODULE_2__.useAppSelector)((state) => state.space.mode);
     const dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_7__.useDispatch)();
     const spaceRef = react__WEBPACK_IMPORTED_MODULE_9___default().useRef(null);
+    const noPanRef = react__WEBPACK_IMPORTED_MODULE_9___default().useRef(null);
     const spaceContainer = react__WEBPACK_IMPORTED_MODULE_9___default().useRef(null);
     const handleAddNote = (0,react__WEBPACK_IMPORTED_MODULE_9__.useCallback)((event) => {
         if (mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Add) {
-            const createCords = {
-                xCord: event.pageX + spaceData.xCord,
-                yCord: event.pageY + spaceData.yCord,
-            };
-            dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_11__.addNote)(createCords));
+            if (!noPanRef.current.contains(event.target)) {
+                const createCords = {
+                    xCord: event.pageX + spaceData.xCord,
+                    yCord: event.pageY + spaceData.yCord,
+                };
+                dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_11__.addNote)(createCords));
+            }
         }
     }, [mode, dispatch, spaceData.xCord, spaceData.yCord]);
     (0,react__WEBPACK_IMPORTED_MODULE_9__.useEffect)(() => {
@@ -23860,10 +23862,10 @@ const MainPage = () => {
         dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_8__.setSpaceData)(newSpaceData));
     };
     //document.addEventListener("wheel", updateZoom)
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.MainPageContainer, { onMouseUp: () => updateCords(), onTouchEnd: () => updateCords(), onWheel: () => updateZoom, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.SpaceContainer, { ref: spaceContainer, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.Space, { onCreate: (vp) => {
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.MainPageContainer, { onMouseUp: () => updateCords(), onTouchEnd: () => updateCords(), onWheel: () => updateZoom, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.SpaceContainer, { ref: spaceContainer, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.Space, { onCreate: (vp) => {
                         vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] });
                         vp.camera.moveBy(spaceData.xCord, spaceData.yCord, 1 - spaceData.zoomFactor);
-                    }, ref: spaceRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.BackgroundImg, { "$mode": mode, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.NoPanArea, { children: notesData.map((note) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote__WEBPACK_IMPORTED_MODULE_1__["default"], { note: note, noteCount: notesData.length }, note.id))) }) }) }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader__WEBPACK_IMPORTED_MODULE_5__["default"], {})] }));
+                    }, ref: spaceRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.BackgroundImg, { "$mode": mode, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.NoPanContainer, { ref: noPanRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.NoPanArea, { children: notesData.map((note) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote__WEBPACK_IMPORTED_MODULE_1__["default"], { note: note, noteCount: notesData.length }, note.id))) }) }) }) }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader__WEBPACK_IMPORTED_MODULE_5__["default"], {})] }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainPage);
 
