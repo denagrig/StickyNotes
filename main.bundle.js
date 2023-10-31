@@ -23359,6 +23359,7 @@ const Container = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div 
   left: ${(props) => props.$left || "30px"};
   background: ${(props) => props.$color || "lightgreen"};
   pointer-events: ${(props) => props.$isActive === src_data__WEBPACK_IMPORTED_MODULE_1__.Mode.Move ? "all" : "none"};
+  z-index: ${(props) => (props.$zIndex + "") || "0"};
   display: inline-block;
   border-radius: 10px;
 `;
@@ -23506,7 +23507,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const StickyNote = ({ note }) => {
+const StickyNote = ({ note, noteCount }) => {
     const noteRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
     const dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_4__.useDispatch)();
     const spaceData = (0,src_hooks__WEBPACK_IMPORTED_MODULE_8__.useAppSelector)((state) => state.space.vpData);
@@ -23523,6 +23524,7 @@ const StickyNote = ({ note }) => {
         width: note.width,
         text: note.text,
         color: note.color,
+        zIndex: note.zIndex
     });
     _melloware_coloris__WEBPACK_IMPORTED_MODULE_7__["default"].init();
     _melloware_coloris__WEBPACK_IMPORTED_MODULE_7__["default"].coloris({
@@ -23556,6 +23558,8 @@ const StickyNote = ({ note }) => {
     }, [moveAt]);
     const noteHeaderPressStart = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         let processedEvent;
+        dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__.maxZIndex)(note.id));
+        noteRef.current.style.zIndex = noteCount + 1 + "";
         if ("touches" in event) {
             processedEvent = event.touches[0];
             document.addEventListener("touchmove", onMove);
@@ -23573,7 +23577,7 @@ const StickyNote = ({ note }) => {
                 noteRef.current.getBoundingClientRect().top -
                 spaceData.yCord;
         moveAt(processedEvent.pageX, processedEvent.pageY);
-    }, [moveAt, onMove, spaceData]);
+    }, [dispatch, moveAt, note.id, onMove, spaceData, noteCount]);
     const noteHeaderPressEnd = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         if ("touches" in event) {
             document.removeEventListener("touchmove", onMove);
@@ -23581,12 +23585,14 @@ const StickyNote = ({ note }) => {
         else {
             document.removeEventListener("mousemove", onMove);
         }
+        noteRef.current.style.zIndex = note.zIndex + "";
         const newNote = Object.assign({}, noteChanges);
         newNote.xCord = noteRef.current.style.left;
         newNote.yCord = noteRef.current.style.top;
+        newNote.zIndex = note.zIndex;
         setNoteChanges(newNote);
         dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__.setNoteData)(newNote));
-    }, [dispatch, noteChanges, onMove]);
+    }, [dispatch, noteChanges, onMove, note]);
     const handleTextChange = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         const newNote = Object.assign({}, noteChanges);
         newNote.text = event.target.value;
@@ -23599,10 +23605,10 @@ const StickyNote = ({ note }) => {
     const resize = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((pageX, pageY) => {
         const width = noteRef.current.getBoundingClientRect().left;
         const height = noteRef.current.getBoundingClientRect().top;
-        if ((pageX - width) / spaceData.zoomFactor > src_data__WEBPACK_IMPORTED_MODULE_5__.noteMinSize.width)
+        if ((pageX - width) / spaceData.zoomFactor >= src_data__WEBPACK_IMPORTED_MODULE_5__.noteMinSize.width)
             noteRef.current.style.width =
                 (pageX - width) / spaceData.zoomFactor + "px";
-        if ((pageY - height) / spaceData.zoomFactor > src_data__WEBPACK_IMPORTED_MODULE_5__.noteMinSize.height)
+        if ((pageY - height) / spaceData.zoomFactor >= src_data__WEBPACK_IMPORTED_MODULE_5__.noteMinSize.height)
             noteRef.current.style.height =
                 (pageY - height) / spaceData.zoomFactor + "px";
     }, [spaceData.zoomFactor]);
@@ -23632,8 +23638,7 @@ const StickyNote = ({ note }) => {
             processedEvent.clientY -
                 noteRef.current.getBoundingClientRect().top -
                 spaceData.yCord;
-        resize(processedEvent.pageX, processedEvent.pageY);
-    }, [onResize, resize, spaceData]);
+    }, [onResize, spaceData]);
     const resizePressEnd = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         if ("touches" in event) {
             document.removeEventListener("touchmove", onResize);
@@ -23653,7 +23658,7 @@ const StickyNote = ({ note }) => {
         setNoteChanges(newNote);
         dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__.setNoteData)(newNote));
     }, [dispatch, noteChanges]);
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Container, { ref: noteRef, "$left": note.xCord, "$top": note.yCord, "$height": note.height, "$width": note.width, "$color": note.color, "$isActive": mode, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Header, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorContainer, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorInput, { type: "text", "data-coloris": true, onInput: handleColorChange }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.BrushIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faPaintBrush })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.MovableHeader, { onMouseDown: noteHeaderPressStart, onTouchStart: noteHeaderPressStart, onMouseUp: noteHeaderPressEnd, onTouchEnd: noteHeaderPressEnd }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteButton, { onClick: handleDelete, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faMinus }) })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextAreaContainer, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextArea, { defaultValue: note.text, onChange: handleTextChange }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Resize, { onMouseDown: resizePressStart, onTouchStart: resizePressStart, onMouseUp: resizePressEnd, onTouchEnd: resizePressEnd })] }));
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Container, { ref: noteRef, "$left": note.xCord, "$top": note.yCord, "$height": note.height, "$width": note.width, "$color": note.color, "$isActive": mode, "$zIndex": note.zIndex, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Header, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorContainer, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorInput, { type: "text", "data-coloris": true, onInput: handleColorChange }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.BrushIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faPaintBrush })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.MovableHeader, { onMouseDown: noteHeaderPressStart, onTouchStart: noteHeaderPressStart, onMouseUp: noteHeaderPressEnd, onTouchEnd: noteHeaderPressEnd }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteButton, { onClick: handleDelete, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faMinus }) })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextAreaContainer, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextArea, { defaultValue: note.text, onChange: handleTextChange }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Resize, { onMouseDown: resizePressStart, onTouchStart: resizePressStart, onMouseUp: resizePressEnd, onTouchEnd: resizePressEnd })] }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (StickyNote);
 
@@ -23698,6 +23703,7 @@ const notesData = [
         height: "300px",
         width: "300px",
         color: "lightgreen",
+        zIndex: 2
     },
 ];
 
@@ -23737,20 +23743,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   MainPageContainer: () => (/* binding */ MainPageContainer),
 /* harmony export */   SpaceContainer: () => (/* binding */ SpaceContainer)
 /* harmony export */ });
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js");
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js");
 /* harmony import */ var src_assets_background_jpg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! src/assets/background.jpg */ "./src/assets/background.jpg");
+/* harmony import */ var src_data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/data */ "./src/data.ts");
 
 
-const BackgroundImg = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
+
+const BackgroundImg = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
   background-image: url(${src_assets_background_jpg__WEBPACK_IMPORTED_MODULE_0__});
   background-repeat:repeat;
   position: absolute;
+  cursor: ${(props) => props.$mode === src_data__WEBPACK_IMPORTED_MODULE_1__.Mode.Move ? "grab" : "copy"};
   width: 10000px;
   height: 10000px;
 `;
-const MainPageContainer = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
+const MainPageContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
 `;
-const SpaceContainer = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
+const SpaceContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
 `;
 
 
@@ -23854,7 +23863,7 @@ const MainPage = () => {
     return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.MainPageContainer, { onMouseUp: () => updateCords(), onTouchEnd: () => updateCords(), onWheel: () => updateZoom, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.SpaceContainer, { ref: spaceContainer, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.Space, { onCreate: (vp) => {
                         vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] });
                         vp.camera.moveBy(spaceData.xCord, spaceData.yCord, 1 - spaceData.zoomFactor);
-                    }, ref: spaceRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.BackgroundImg, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.NoPanArea, { children: notesData.map((note) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote__WEBPACK_IMPORTED_MODULE_1__["default"], { note: note }, note.id))) }) }) }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader__WEBPACK_IMPORTED_MODULE_5__["default"], {})] }));
+                    }, ref: spaceRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.BackgroundImg, { "$mode": mode, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.NoPanArea, { children: notesData.map((note) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote__WEBPACK_IMPORTED_MODULE_1__["default"], { note: note, noteCount: notesData.length }, note.id))) }) }) }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader__WEBPACK_IMPORTED_MODULE_5__["default"], {})] }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainPage);
 
@@ -23872,6 +23881,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   clearAllNotes: () => (/* binding */ clearAllNotes),
 /* harmony export */   loadNotes: () => (/* binding */ loadNotes),
+/* harmony export */   moveToTop: () => (/* binding */ moveToTop),
 /* harmony export */   popNote: () => (/* binding */ popNote),
 /* harmony export */   pushNote: () => (/* binding */ pushNote),
 /* harmony export */   saveNote: () => (/* binding */ saveNote)
@@ -23913,6 +23923,7 @@ const pushNote = async (cords) => {
             width: "300px",
             text: "",
             color: "lightgreen",
+            zIndex: notesRecord.length + 1
         };
         console.log("note pushed");
         notesRecord.push(newNote);
@@ -23933,6 +23944,11 @@ const popNote = async (id) => {
             }
             notePos++;
         });
+        notesRecord.map((note) => {
+            if (note.zIndex > notesRecord[splicePos].zIndex) {
+                note.zIndex--;
+            }
+        });
         notesRecord.splice(splicePos, 1);
         localStorage.setItem("notesRecord", JSON.stringify(notesRecord));
         resolve(notesRecord);
@@ -23943,6 +23959,27 @@ const clearAllNotes = async () => {
         localStorage.removeItem("notesRecord");
         console.log("note cleared");
         resolve([]);
+    });
+};
+const moveToTop = async (id) => {
+    return new Promise((resolve) => {
+        let curPos = 0;
+        let notePos = 0;
+        const notesRecord = JSON.parse(localStorage.getItem("notesRecord") || "[]");
+        notesRecord.map((note) => {
+            if (note.id == id) {
+                notePos = curPos;
+            }
+            curPos++;
+        });
+        notesRecord.map((note) => {
+            if (note.zIndex > notesRecord[notePos].zIndex) {
+                note.zIndex--;
+            }
+        });
+        notesRecord[notePos].zIndex = notesRecord.length;
+        localStorage.setItem("notesRecord", JSON.stringify(notesRecord));
+        resolve(notesRecord);
     });
 };
 
@@ -23963,6 +24000,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   deleteNote: () => (/* binding */ deleteNote),
 /* harmony export */   loadNoteData: () => (/* binding */ loadNoteData),
+/* harmony export */   maxZIndex: () => (/* binding */ maxZIndex),
 /* harmony export */   setNoteData: () => (/* binding */ setNoteData)
 /* harmony export */ });
 /* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
@@ -24009,6 +24047,14 @@ const clearNotes = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createAsyncT
         return thunkAPI.rejectWithValue(e);
     }
 });
+const maxZIndex = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createAsyncThunk)("noteSlice/maxZIndex", async (noteId, thunkAPI) => {
+    try {
+        return await (0,src_slices_noteLocalStorage__WEBPACK_IMPORTED_MODULE_0__.moveToTop)(noteId);
+    }
+    catch (e) {
+        return thunkAPI.rejectWithValue(e);
+    }
+});
 const initialState = {
     Notes: [],
 };
@@ -24030,6 +24076,9 @@ const noteSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createSlice)(
                 state.Notes = action.payload;
             });
         builder.addCase(clearNotes.fulfilled, (state, action) => {
+            state.Notes = action.payload;
+        });
+        builder.addCase(maxZIndex.fulfilled, (state, action) => {
             state.Notes = action.payload;
         });
     },
