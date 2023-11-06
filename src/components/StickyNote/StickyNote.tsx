@@ -23,7 +23,7 @@ import Coloris from "@melloware/coloris"
 import React from "react"
 import { useAppSelector } from "src/hooks"
 
-const StickyNote = ({ note, noteCount }: { note: NoteData, noteCount: number }) => {
+const StickyNote = ({ note }: { note: NoteData }) => {
   const noteRef = useRef<HTMLHeadingElement>(null)
   const dispatch = useDispatch<AppDispatch>()
   const spaceData: VpData = useAppSelector((state) => state.space.vpData)
@@ -38,8 +38,7 @@ const StickyNote = ({ note, noteCount }: { note: NoteData, noteCount: number }) 
     height: note.height,
     width: note.width,
     text: note.text,
-    color: note.color,
-    zIndex: note.zIndex
+    color: note.color
   })
 
   Coloris.init()
@@ -81,7 +80,6 @@ const StickyNote = ({ note, noteCount }: { note: NoteData, noteCount: number }) 
     (event: React.MouseEvent | React.TouchEvent) => {
       let processedEvent
       dispatch(maxZIndex(note.id))
-      noteRef.current!.style.zIndex = noteCount + 1 + ""
       if ("touches" in event) {
         processedEvent = event.touches[0]
         document.addEventListener("touchmove", onMove)
@@ -101,7 +99,7 @@ const StickyNote = ({ note, noteCount }: { note: NoteData, noteCount: number }) 
 
       moveAt(processedEvent.pageX, processedEvent.pageY)
     },
-    [dispatch, moveAt, note.id, onMove, spaceData, noteCount]
+    [dispatch, moveAt, note.id, onMove, spaceData]
   )
 
   const noteHeaderPressEnd = useCallback(
@@ -113,16 +111,15 @@ const StickyNote = ({ note, noteCount }: { note: NoteData, noteCount: number }) 
         document.removeEventListener("mousemove", onMove)
       }
 
-      noteRef.current!.style.zIndex = note.zIndex + ""
       
       const newNote = Object.assign({}, noteChanges)
       newNote.xCord = noteRef.current!.style.left
       newNote.yCord = noteRef.current!.style.top
-      newNote.zIndex = note.zIndex
-      setNoteChanges(newNote)
+      //newNote.zIndex = note.zIndex
+      //setNoteChanges(newNote)
       dispatch(setNoteData(newNote))
     },
-    [dispatch, noteChanges, onMove, note]
+    [dispatch, noteChanges, onMove]
   )
 
   const handleTextChange = useCallback(
@@ -143,7 +140,7 @@ const StickyNote = ({ note, noteCount }: { note: NoteData, noteCount: number }) 
     (pageX: number, pageY: number) => {
       const width = noteRef.current!.getBoundingClientRect().left
       const height = noteRef.current!.getBoundingClientRect().top
-      if ((pageX - width) / spaceData.zoomFactor >= noteMinSize.width)
+      if ((pageX - width)/ spaceData.zoomFactor >= noteMinSize.width)
         noteRef.current!.style.width =
           (pageX - width) / spaceData.zoomFactor + "px"
       if ((pageY - height) / spaceData.zoomFactor >= noteMinSize.height)
@@ -166,25 +163,13 @@ const StickyNote = ({ note, noteCount }: { note: NoteData, noteCount: number }) 
 
   const resizePressStart = useCallback(
     (event: React.MouseEvent | React.TouchEvent) => {
-      let processedEvent
       if ("touches" in event) {
-        processedEvent = event.touches[0]
         document.addEventListener("touchmove", onResize)
       } else {
-        processedEvent = event
         document.addEventListener("mousemove", onResize)
       }
-
-      shiftRef.current.xCord =
-        processedEvent.clientX -
-        noteRef.current!.getBoundingClientRect().left -
-        spaceData.xCord
-      shiftRef.current.yCord =
-        processedEvent.clientY -
-        noteRef.current!.getBoundingClientRect().top -
-        spaceData.yCord
     },
-    [onResize, spaceData]
+    [onResize]
   )
 
   const resizePressEnd = useCallback(
@@ -221,7 +206,6 @@ const StickyNote = ({ note, noteCount }: { note: NoteData, noteCount: number }) 
       $height={note.height}
       $width={note.width}
       $color={note.color}
-      $zIndex={note.zIndex}
     >
       <Header>
         <ChangeColorContainer>

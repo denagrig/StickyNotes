@@ -46,7 +46,6 @@ export const pushNote = async (cords: CordsPair) => {
       width: "300px",
       text: "",
       color: "lightgreen",
-      zIndex: notesRecord.length + 1
     }
     console.log("note pushed")
     notesRecord.push(newNote)
@@ -70,11 +69,6 @@ export const popNote = async (id: number) => {
       }
       notePos++
     })
-    notesRecord.map((note) => {
-      if (note.zIndex > notesRecord[splicePos].zIndex) {
-        note.zIndex--
-      }
-    })
     notesRecord.splice(splicePos, 1)
     localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
     resolve(notesRecord)
@@ -96,18 +90,22 @@ export const moveToTop = async (id: number) => {
     const notesRecord: NoteData[] = JSON.parse(
       localStorage.getItem("notesRecord") || "[]"
     )
+    let noteData : NoteData = notesRecord[0]
     notesRecord.map((note) => {
       if (note.id == id) {
+        noteData = notesRecord[curPos]
         notePos = curPos
       }
       curPos++
     })
+    curPos = 0
     notesRecord.map((note) => {
-      if (note.zIndex > notesRecord[notePos].zIndex) {
-        note.zIndex--
+      if (curPos > notePos) {
+        notesRecord[curPos-1] = note
       }
+      curPos++
     })
-    notesRecord[notePos].zIndex = notesRecord.length
+    notesRecord[notesRecord.length - 1] = noteData
     localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
     resolve(notesRecord)
   })

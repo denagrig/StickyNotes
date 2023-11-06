@@ -15,7 +15,6 @@ export const notesData : NoteData[] = [
     text: "hello",
     height: "300px",
     width: "300px",
-    color: "lightgreen",
-    zIndex: 2
+    color: "lightgreen"
   },
 ]

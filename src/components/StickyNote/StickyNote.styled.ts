@@ -7,7 +7,6 @@ export const Container = styled.div<{
   $height?: string;
   $width?: string;
   $color?: string;
-  $zIndex?: number;
 }>`
   width: ${(props) => props.$width || "300px"};
   height: ${(props) => props.$height || "300px"};
@@ -16,7 +15,6 @@ export const Container = styled.div<{
   top: ${(props) => props.$top || "30px"};
   left: ${(props) => props.$left || "30px"};
   background: ${(props) => props.$color || "lightgreen"};
-  z-index: ${(props) => (props.$zIndex+"") || "0"};
   display: inline-block;
   border-radius: 10px;
 `

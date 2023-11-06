@@ -104,7 +104,7 @@ const MainPage = () => {
             <NoPanContainer ref={noPanRef}>
               <NoPanArea>
                 {notesData.map((note: NoteData) => (
-                  <StickyNote note={note} noteCount={notesData.length} key={note.id} />
+                  <StickyNote note={note} key={note.id} />
                 ))}
               </NoPanArea>
             </NoPanContainer>
