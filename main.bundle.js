@@ -23316,7 +23316,7 @@ const PageHeader = () => {
     const handleClear = () => {
         dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_5__.clearNotes)());
     };
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_PageHeader_PageHeader_styled__WEBPACK_IMPORTED_MODULE_2__.Buttons, { children: [curMode ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader_styled__WEBPACK_IMPORTED_MODULE_2__.LeftButtons, { color: "lightBlue", onClick: enableAddNote, children: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0417\u0430\u043C\u0435\u0442\u043A\u0443" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader_styled__WEBPACK_IMPORTED_MODULE_2__.LeftButtons, { color: "grey", onClick: enableMovement, children: "\u0420\u0435\u0436\u0438\u043C \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u044F" })] })) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader_styled__WEBPACK_IMPORTED_MODULE_2__.LeftButtons, { color: "grey", onClick: enableAddNote, children: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0417\u0430\u043C\u0435\u0442\u043A\u0443" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader_styled__WEBPACK_IMPORTED_MODULE_2__.LeftButtons, { color: "lightBlue", onClick: enableMovement, children: "\u0420\u0435\u0436\u0438\u043C \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u044F" })] })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader_styled__WEBPACK_IMPORTED_MODULE_2__.ClearButton, { onClick: handleClear, children: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C" })] }));
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_PageHeader_PageHeader_styled__WEBPACK_IMPORTED_MODULE_2__.Buttons, { children: [curMode == src_data__WEBPACK_IMPORTED_MODULE_3__.Mode.Add ? ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader_styled__WEBPACK_IMPORTED_MODULE_2__.LeftButtons, { color: "lightBlue", onClick: enableAddNote, children: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0417\u0430\u043C\u0435\u0442\u043A\u0443" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader_styled__WEBPACK_IMPORTED_MODULE_2__.LeftButtons, { color: "grey", onClick: enableMovement, children: "\u0420\u0435\u0436\u0438\u043C \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u044F" })] })) : ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader_styled__WEBPACK_IMPORTED_MODULE_2__.LeftButtons, { color: "grey", onClick: enableAddNote, children: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0417\u0430\u043C\u0435\u0442\u043A\u0443" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader_styled__WEBPACK_IMPORTED_MODULE_2__.LeftButtons, { color: "lightBlue", onClick: enableMovement, children: "\u0420\u0435\u0436\u0438\u043C \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u044F" })] })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader_styled__WEBPACK_IMPORTED_MODULE_2__.ClearButton, { onClick: handleClear, children: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C" })] }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PageHeader);
 
@@ -23356,7 +23356,7 @@ const Container = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div 
   top: ${(props) => props.$top || "30px"};
   left: ${(props) => props.$left || "30px"};
   background: ${(props) => props.$color || "lightgreen"};
-  display: inline-block;
+  display: block;
   border-radius: 10px;
 `;
 const MovableHeader = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
@@ -23364,25 +23364,27 @@ const MovableHeader = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].
   height: 15px;
   color: black;
   padding: 0 0 10px 0;
-  width: 100%;
+  flex: 1;
   cursor: grab;
   @media (max-width: 1024px) {
     height: 35px;
   }
 `;
 const TextAreaContainer = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
+  width: 100%;
+  height: 100%;
 `;
 const TextArea = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].textarea `
   width: 100%;
   height: 80%;
   box-sizing: border-box;
-  padding: 5px 10px 5px 10px;
+  padding: 0px 10px 0px 10px;
   line-height: 1.5;
   outline: none;
   resize: none;
   border: none;
   background: inherit;
-  owerflow: auto;
+  overflow: auto;
   @media (max-width: 1024px) {
     font-size: 25px;
   }
@@ -23402,7 +23404,6 @@ const DeleteButton = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].d
   cursor: pointer;
   @media (max-width: 1024px) {
     height: 35px;
-    width: 60px;
   }
 `;
 const Header = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
@@ -23433,10 +23434,8 @@ const ChangeColorContainer = styled_components__WEBPACK_IMPORTED_MODULE_1__["def
   padding: 0 0 10px 0;
   width: 30px;
   line-height: 15px;
-  font-size: 30px;
   @media (max-width: 1024px) {
     height: 35px;
-    width: 65px;
   }
 `;
 const ChangeColorInput = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].input `
@@ -23454,8 +23453,8 @@ const BrushIcon = (0,styled_components__WEBPACK_IMPORTED_MODULE_1__["default"])(
   pointer-events: none;
   @media (max-width: 1024px) {
     top: 8px;
-    left: 8px;
-    font-size: 1.8rem;
+    left: 0px;
+    font-size: 1.5rem;
   }
 `;
 const DeleteIcon = (0,styled_components__WEBPACK_IMPORTED_MODULE_1__["default"])((0,_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_0__.FontAwesomeIcon)) `
@@ -23463,7 +23462,7 @@ const DeleteIcon = (0,styled_components__WEBPACK_IMPORTED_MODULE_1__["default"])
   position: relative;
   @media (max-width: 1024px) {
     top: 8px;
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 `;
 
@@ -23505,7 +23504,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const StickyNote = ({ note }) => {
     const noteRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
-    const resizeRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+    const headerRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
     const dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_4__.useDispatch)();
     const spaceData = (0,src_hooks__WEBPACK_IMPORTED_MODULE_8__.useAppSelector)((state) => state.space.vpData);
     const shiftRef = react__WEBPACK_IMPORTED_MODULE_1___default().useRef({
@@ -23553,6 +23552,7 @@ const StickyNote = ({ note }) => {
     }, [moveAt]);
     const noteHeaderPressStart = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         let processedEvent;
+        headerRef.current.style.cursor = "grabbing";
         dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__.maxZIndex)(note.id));
         if ("touches" in event) {
             processedEvent = event.touches[0];
@@ -23573,6 +23573,7 @@ const StickyNote = ({ note }) => {
         moveAt(processedEvent.pageX, processedEvent.pageY);
     }, [dispatch, moveAt, note.id, onMove, spaceData]);
     const noteHeaderPressEnd = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
+        headerRef.current.style.cursor = "grab";
         if ("touches" in event) {
             document.removeEventListener("touchmove", onMove);
         }
@@ -23582,8 +23583,6 @@ const StickyNote = ({ note }) => {
         const newNote = Object.assign({}, noteChanges);
         newNote.xCord = noteRef.current.style.left;
         newNote.yCord = noteRef.current.style.top;
-        //newNote.zIndex = note.zIndex
-        //setNoteChanges(newNote)
         dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__.setNoteData)(newNote));
     }, [dispatch, noteChanges, onMove]);
     const handleTextChange = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
@@ -23602,8 +23601,6 @@ const StickyNote = ({ note }) => {
             noteRef.current.style.width = width + (pageX - shiftRef.current.xCord) / spaceData.zoomFactor + "px";
         if (height + (pageY - shiftRef.current.yCord) / spaceData.zoomFactor >= src_data__WEBPACK_IMPORTED_MODULE_5__.noteMinSize.height)
             noteRef.current.style.height = height + (pageY - shiftRef.current.yCord) / spaceData.zoomFactor + "px";
-        //page X - место нажатия, width - правй ыерзний угол заметки
-        console.log(height, noteRef.current.style.height, noteChanges.height);
     }, [noteChanges.height, noteChanges.width, spaceData.zoomFactor]);
     const onResize = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         if ("touches" in event) {
@@ -23613,28 +23610,14 @@ const StickyNote = ({ note }) => {
             resize(event.pageX, event.pageY);
         }
     }, [resize]);
-    const resizePressStart = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
-        let processedEvent;
-        if ("touches" in event) {
-            processedEvent = event.touches[0];
-            document.addEventListener("touchmove", onResize);
-        }
-        else {
-            processedEvent = event;
-            document.addEventListener("mousemove", onResize);
-        }
-        shiftRef.current.xCord =
-            processedEvent.clientX;
-        shiftRef.current.yCord =
-            processedEvent.clientY;
-        console.log(shiftRef.current.xCord);
-    }, [onResize]);
     const resizePressEnd = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         if ("touches" in event) {
             document.removeEventListener("touchmove", onResize);
+            document.removeEventListener("touchend", resizePressEnd);
         }
         else {
             document.removeEventListener("mousemove", onResize);
+            document.removeEventListener("mouseup", resizePressEnd);
         }
         const newNote = Object.assign({}, noteChanges);
         newNote.height = noteRef.current.style.height;
@@ -23642,13 +23625,30 @@ const StickyNote = ({ note }) => {
         setNoteChanges(newNote);
         dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__.setNoteData)(newNote));
     }, [dispatch, noteChanges, onResize]);
+    const resizePressStart = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
+        let processedEvent;
+        if ("touches" in event) {
+            processedEvent = event.touches[0];
+            document.addEventListener("touchmove", onResize);
+            document.addEventListener("touchend", resizePressEnd);
+        }
+        else {
+            processedEvent = event;
+            document.addEventListener("mousemove", onResize);
+            document.addEventListener("mouseup", resizePressEnd);
+        }
+        shiftRef.current.xCord =
+            processedEvent.clientX;
+        shiftRef.current.yCord =
+            processedEvent.clientY;
+    }, [onResize, resizePressEnd]);
     const handleColorChange = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         const newNote = Object.assign({}, noteChanges);
         newNote.color = event.target.value;
         setNoteChanges(newNote);
         dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__.setNoteData)(newNote));
     }, [dispatch, noteChanges]);
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Container, { ref: noteRef, "$left": note.xCord, "$top": note.yCord, "$height": note.height, "$width": note.width, "$color": note.color, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Header, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorContainer, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorInput, { type: "text", "data-coloris": true, onInput: handleColorChange }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.BrushIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faPaintBrush })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.MovableHeader, { onMouseDown: noteHeaderPressStart, onTouchStart: noteHeaderPressStart, onMouseUp: noteHeaderPressEnd, onTouchEnd: noteHeaderPressEnd }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteButton, { onClick: handleDelete, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faMinus }) })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextAreaContainer, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextArea, { defaultValue: note.text, onChange: handleTextChange }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Resize, { ref: resizeRef, onMouseDown: resizePressStart, onTouchStart: resizePressStart, onMouseUp: resizePressEnd, onTouchEnd: resizePressEnd })] }));
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Container, { ref: noteRef, "$left": note.xCord, "$top": note.yCord, "$height": note.height, "$width": note.width, "$color": note.color, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Header, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorContainer, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorInput, { type: "text", "data-coloris": true, onInput: handleColorChange }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.BrushIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faPaintBrush })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.MovableHeader, { ref: headerRef, onMouseDown: noteHeaderPressStart, onTouchStart: noteHeaderPressStart, onMouseUp: noteHeaderPressEnd, onTouchEnd: noteHeaderPressEnd }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteButton, { onClick: handleDelete, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faMinus }) })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextAreaContainer, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextArea, { defaultValue: note.text, onChange: handleTextChange }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Resize, { onMouseDown: resizePressStart, onTouchStart: resizePressStart })] }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (StickyNote);
 
@@ -23679,6 +23679,7 @@ var Mode;
 (function (Mode) {
     Mode[Mode["Move"] = 0] = "Move";
     Mode[Mode["Add"] = 1] = "Add";
+    Mode[Mode["Grabbing"] = 2] = "Grabbing";
 })(Mode || (Mode = {}));
 const noteMinSize = {
     height: 200,
@@ -23743,7 +23744,18 @@ const BackgroundImg = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].
   background-image: url(${src_assets_background_jpg__WEBPACK_IMPORTED_MODULE_0__});
   background-repeat:repeat;
   position: absolute;
-  cursor: ${(props) => props.$mode === src_data__WEBPACK_IMPORTED_MODULE_1__.Mode.Move ? "grab" : "copy"};
+  cursor: ${props => {
+    const mode = props.$mode;
+    if (mode == src_data__WEBPACK_IMPORTED_MODULE_1__.Mode.Move) {
+        return "grab";
+    }
+    else if (mode == src_data__WEBPACK_IMPORTED_MODULE_1__.Mode.Add) {
+        return "copy";
+    }
+    else {
+        return "grabbing";
+    }
+}};
   width: 10000px;
   height: 10000px;
 `;
@@ -23795,14 +23807,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const MainPage = () => {
-    //localStorage.clear()
     const notesData = (0,src_hooks__WEBPACK_IMPORTED_MODULE_2__.useAppSelector)((state) => state.note.Notes);
     const spaceData = (0,src_hooks__WEBPACK_IMPORTED_MODULE_2__.useAppSelector)((state) => state.space.vpData);
     const mode = (0,src_hooks__WEBPACK_IMPORTED_MODULE_2__.useAppSelector)((state) => state.space.mode);
     const dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_7__.useDispatch)();
     const spaceRef = react__WEBPACK_IMPORTED_MODULE_9___default().useRef(null);
     const noPanRef = react__WEBPACK_IMPORTED_MODULE_9___default().useRef(null);
-    const spaceContainer = react__WEBPACK_IMPORTED_MODULE_9___default().useRef(null);
+    const spaceContainerRef = react__WEBPACK_IMPORTED_MODULE_9___default().useRef(null);
     const handleAddNote = (0,react__WEBPACK_IMPORTED_MODULE_9__.useCallback)((event) => {
         if (mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Add) {
             if (!noPanRef.current.contains(event.target)) {
@@ -23815,8 +23826,8 @@ const MainPage = () => {
         }
     }, [mode, dispatch, spaceData.xCord, spaceData.yCord]);
     (0,react__WEBPACK_IMPORTED_MODULE_9__.useEffect)(() => {
-        const currentSpace = spaceContainer.current;
-        if (mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Move) {
+        const currentSpace = spaceContainerRef.current;
+        if (mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Move || mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Grabbing) {
             currentSpace?.removeEventListener("click", handleAddNote);
             spaceRef.current?.viewPort?.setBounds({
                 x: [0, 10000],
@@ -23854,8 +23865,14 @@ const MainPage = () => {
         console.log(spaceRef.current?.viewPort?.zoomFactor);
         dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_8__.setSpaceData)(newSpaceData));
     };
+    const changeCursor = () => {
+        if (mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Move)
+            dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_8__.setMode)(src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Grabbing));
+        else if (mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Grabbing)
+            dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_8__.setMode)(src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Move));
+    };
     //document.addEventListener("wheel", updateZoom)
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.MainPageContainer, { onMouseUp: () => updateCords(), onTouchEnd: () => updateCords(), onWheel: () => updateZoom, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.SpaceContainer, { ref: spaceContainer, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.Space, { onCreate: (vp) => {
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.MainPageContainer, { onMouseUp: () => updateCords(), onTouchEnd: () => updateCords(), onWheel: () => updateZoom, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.SpaceContainer, { ref: spaceContainerRef, onMouseDown: changeCursor, onTouchStart: changeCursor, onMouseUp: changeCursor, onTouchEnd: changeCursor, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.Space, { onCreate: (vp) => {
                         vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] });
                         vp.camera.moveBy(spaceData.xCord, spaceData.yCord, 1 - spaceData.zoomFactor);
                     }, ref: spaceRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.BackgroundImg, { "$mode": mode, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.NoPanContainer, { ref: noPanRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.NoPanArea, { children: notesData.map((note) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote__WEBPACK_IMPORTED_MODULE_1__["default"], { note: note }, note.id))) }) }) }) }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader__WEBPACK_IMPORTED_MODULE_5__["default"], {})] }));
