@@ -23356,7 +23356,6 @@ const Container = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div 
   top: ${(props) => props.$top || "30px"};
   left: ${(props) => props.$left || "30px"};
   background: ${(props) => props.$color || "lightgreen"};
-  z-index: ${(props) => (props.$zIndex + "") || "0"};
   display: inline-block;
   border-radius: 10px;
 `;
@@ -23504,8 +23503,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const StickyNote = ({ note, noteCount }) => {
+const StickyNote = ({ note }) => {
     const noteRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+    const resizeRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
     const dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_4__.useDispatch)();
     const spaceData = (0,src_hooks__WEBPACK_IMPORTED_MODULE_8__.useAppSelector)((state) => state.space.vpData);
     const shiftRef = react__WEBPACK_IMPORTED_MODULE_1___default().useRef({
@@ -23519,8 +23519,7 @@ const StickyNote = ({ note, noteCount }) => {
         height: note.height,
         width: note.width,
         text: note.text,
-        color: note.color,
-        zIndex: note.zIndex
+        color: note.color
     });
     _melloware_coloris__WEBPACK_IMPORTED_MODULE_7__["default"].init();
     _melloware_coloris__WEBPACK_IMPORTED_MODULE_7__["default"].coloris({
@@ -23555,7 +23554,6 @@ const StickyNote = ({ note, noteCount }) => {
     const noteHeaderPressStart = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         let processedEvent;
         dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__.maxZIndex)(note.id));
-        noteRef.current.style.zIndex = noteCount + 1 + "";
         if ("touches" in event) {
             processedEvent = event.touches[0];
             document.addEventListener("touchmove", onMove);
@@ -23573,7 +23571,7 @@ const StickyNote = ({ note, noteCount }) => {
                 noteRef.current.getBoundingClientRect().top -
                 spaceData.yCord;
         moveAt(processedEvent.pageX, processedEvent.pageY);
-    }, [dispatch, moveAt, note.id, onMove, spaceData, noteCount]);
+    }, [dispatch, moveAt, note.id, onMove, spaceData]);
     const noteHeaderPressEnd = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         if ("touches" in event) {
             document.removeEventListener("touchmove", onMove);
@@ -23581,14 +23579,13 @@ const StickyNote = ({ note, noteCount }) => {
         else {
             document.removeEventListener("mousemove", onMove);
         }
-        noteRef.current.style.zIndex = note.zIndex + "";
         const newNote = Object.assign({}, noteChanges);
         newNote.xCord = noteRef.current.style.left;
         newNote.yCord = noteRef.current.style.top;
-        newNote.zIndex = note.zIndex;
-        setNoteChanges(newNote);
+        //newNote.zIndex = note.zIndex
+        //setNoteChanges(newNote)
         dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__.setNoteData)(newNote));
-    }, [dispatch, noteChanges, onMove, note]);
+    }, [dispatch, noteChanges, onMove]);
     const handleTextChange = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         const newNote = Object.assign({}, noteChanges);
         newNote.text = event.target.value;
@@ -23599,15 +23596,15 @@ const StickyNote = ({ note, noteCount }) => {
         dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__.deleteNote)(note.id));
     };
     const resize = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((pageX, pageY) => {
-        const width = noteRef.current.getBoundingClientRect().left;
-        const height = noteRef.current.getBoundingClientRect().top;
-        if ((pageX - width) / spaceData.zoomFactor >= src_data__WEBPACK_IMPORTED_MODULE_5__.noteMinSize.width)
-            noteRef.current.style.width =
-                (pageX - width) / spaceData.zoomFactor + "px";
-        if ((pageY - height) / spaceData.zoomFactor >= src_data__WEBPACK_IMPORTED_MODULE_5__.noteMinSize.height)
-            noteRef.current.style.height =
-                (pageY - height) / spaceData.zoomFactor + "px";
-    }, [spaceData.zoomFactor]);
+        const width = parseFloat(noteChanges.width.replace("px", ""));
+        const height = parseFloat(noteChanges.height.replace("px", ""));
+        if (width + (pageX - shiftRef.current.xCord) / spaceData.zoomFactor >= src_data__WEBPACK_IMPORTED_MODULE_5__.noteMinSize.width)
+            noteRef.current.style.width = width + (pageX - shiftRef.current.xCord) / spaceData.zoomFactor + "px";
+        if (height + (pageY - shiftRef.current.yCord) / spaceData.zoomFactor >= src_data__WEBPACK_IMPORTED_MODULE_5__.noteMinSize.height)
+            noteRef.current.style.height = height + (pageY - shiftRef.current.yCord) / spaceData.zoomFactor + "px";
+        //page X - место нажатия, width - правй ыерзний угол заметки
+        console.log(height, noteRef.current.style.height, noteChanges.height);
+    }, [noteChanges.height, noteChanges.width, spaceData.zoomFactor]);
     const onResize = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         if ("touches" in event) {
             resize(event.touches[0].pageX, event.touches[0].pageY);
@@ -23627,14 +23624,11 @@ const StickyNote = ({ note, noteCount }) => {
             document.addEventListener("mousemove", onResize);
         }
         shiftRef.current.xCord =
-            processedEvent.clientX -
-                noteRef.current.getBoundingClientRect().left -
-                spaceData.xCord;
+            processedEvent.clientX;
         shiftRef.current.yCord =
-            processedEvent.clientY -
-                noteRef.current.getBoundingClientRect().top -
-                spaceData.yCord;
-    }, [onResize, spaceData]);
+            processedEvent.clientY;
+        console.log(shiftRef.current.xCord);
+    }, [onResize]);
     const resizePressEnd = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         if ("touches" in event) {
             document.removeEventListener("touchmove", onResize);
@@ -23654,7 +23648,7 @@ const StickyNote = ({ note, noteCount }) => {
         setNoteChanges(newNote);
         dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__.setNoteData)(newNote));
     }, [dispatch, noteChanges]);
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Container, { ref: noteRef, "$left": note.xCord, "$top": note.yCord, "$height": note.height, "$width": note.width, "$color": note.color, "$zIndex": note.zIndex, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Header, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorContainer, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorInput, { type: "text", "data-coloris": true, onInput: handleColorChange }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.BrushIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faPaintBrush })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.MovableHeader, { onMouseDown: noteHeaderPressStart, onTouchStart: noteHeaderPressStart, onMouseUp: noteHeaderPressEnd, onTouchEnd: noteHeaderPressEnd }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteButton, { onClick: handleDelete, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faMinus }) })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextAreaContainer, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextArea, { defaultValue: note.text, onChange: handleTextChange }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Resize, { onMouseDown: resizePressStart, onTouchStart: resizePressStart, onMouseUp: resizePressEnd, onTouchEnd: resizePressEnd })] }));
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Container, { ref: noteRef, "$left": note.xCord, "$top": note.yCord, "$height": note.height, "$width": note.width, "$color": note.color, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Header, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorContainer, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.ChangeColorInput, { type: "text", "data-coloris": true, onInput: handleColorChange }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.BrushIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faPaintBrush })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.MovableHeader, { onMouseDown: noteHeaderPressStart, onTouchStart: noteHeaderPressStart, onMouseUp: noteHeaderPressEnd, onTouchEnd: noteHeaderPressEnd }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteButton, { onClick: handleDelete, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.DeleteIcon, { icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_9__.faMinus }) })] }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextAreaContainer, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.TextArea, { defaultValue: note.text, onChange: handleTextChange }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__.Resize, { ref: resizeRef, onMouseDown: resizePressStart, onTouchStart: resizePressStart, onMouseUp: resizePressEnd, onTouchEnd: resizePressEnd })] }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (StickyNote);
 
@@ -23698,8 +23692,7 @@ const notesData = [
         text: "hello",
         height: "300px",
         width: "300px",
-        color: "lightgreen",
-        zIndex: 2
+        color: "lightgreen"
     },
 ];
 
@@ -23865,7 +23858,7 @@ const MainPage = () => {
     return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.MainPageContainer, { onMouseUp: () => updateCords(), onTouchEnd: () => updateCords(), onWheel: () => updateZoom, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.SpaceContainer, { ref: spaceContainer, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.Space, { onCreate: (vp) => {
                         vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] });
                         vp.camera.moveBy(spaceData.xCord, spaceData.yCord, 1 - spaceData.zoomFactor);
-                    }, ref: spaceRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.BackgroundImg, { "$mode": mode, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.NoPanContainer, { ref: noPanRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.NoPanArea, { children: notesData.map((note) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote__WEBPACK_IMPORTED_MODULE_1__["default"], { note: note, noteCount: notesData.length }, note.id))) }) }) }) }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader__WEBPACK_IMPORTED_MODULE_5__["default"], {})] }));
+                    }, ref: spaceRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.BackgroundImg, { "$mode": mode, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.NoPanContainer, { ref: noPanRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.NoPanArea, { children: notesData.map((note) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote__WEBPACK_IMPORTED_MODULE_1__["default"], { note: note }, note.id))) }) }) }) }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader__WEBPACK_IMPORTED_MODULE_5__["default"], {})] }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainPage);
 
@@ -23925,7 +23918,6 @@ const pushNote = async (cords) => {
             width: "300px",
             text: "",
             color: "lightgreen",
-            zIndex: notesRecord.length + 1
         };
         console.log("note pushed");
         notesRecord.push(newNote);
@@ -23946,11 +23938,6 @@ const popNote = async (id) => {
             }
             notePos++;
         });
-        notesRecord.map((note) => {
-            if (note.zIndex > notesRecord[splicePos].zIndex) {
-                note.zIndex--;
-            }
-        });
         notesRecord.splice(splicePos, 1);
         localStorage.setItem("notesRecord", JSON.stringify(notesRecord));
         resolve(notesRecord);
@@ -23968,18 +23955,22 @@ const moveToTop = async (id) => {
         let curPos = 0;
         let notePos = 0;
         const notesRecord = JSON.parse(localStorage.getItem("notesRecord") || "[]");
+        let noteData = notesRecord[0];
         notesRecord.map((note) => {
             if (note.id == id) {
+                noteData = notesRecord[curPos];
                 notePos = curPos;
             }
             curPos++;
         });
+        curPos = 0;
         notesRecord.map((note) => {
-            if (note.zIndex > notesRecord[notePos].zIndex) {
-                note.zIndex--;
+            if (curPos > notePos) {
+                notesRecord[curPos - 1] = note;
             }
+            curPos++;
         });
-        notesRecord[notePos].zIndex = notesRecord.length;
+        notesRecord[notesRecord.length - 1] = noteData;
         localStorage.setItem("notesRecord", JSON.stringify(notesRecord));
         resolve(notesRecord);
     });
