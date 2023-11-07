@@ -4,43 +4,46 @@ import { CordsPair, NoteData, VpData } from "src/types"
 import "@melloware/coloris/dist/coloris.css"
 import { NoPanArea, Space } from "react-zoomable-ui"
 import PageHeader from "src/components/PageHeader/PageHeader"
-import { BackgroundImg, MainPageContainer, NoPanContainer, SpaceContainer } from "src/pages/MainPage/MainPage.styled"
+import {
+  BackgroundImg,
+  MainPageContainer,
+  NoPanContainer,
+  SpaceContainer,
+} from "src/pages/MainPage/MainPage.styled"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "src/store"
-import { setSpaceData } from "src/slices/spaceSlice"
+import { setMode, setSpaceData } from "src/slices/spaceSlice"
 import React, { useCallback, useEffect } from "react"
 import { Mode } from "src/data"
 import { addNote } from "src/slices/noteSlice"
 
 const MainPage = () => {
-  //localStorage.clear()
   const notesData: NoteData[] = useAppSelector((state) => state.note.Notes)
   const spaceData: VpData = useAppSelector((state) => state.space.vpData)
   const mode: number = useAppSelector((state) => state.space.mode)
   const dispatch = useDispatch<AppDispatch>()
   const spaceRef = React.useRef<Space | null>(null)
   const noPanRef = React.useRef<HTMLDivElement | null>(null)
-  const spaceContainer = React.useRef<HTMLDivElement | null>(null)
+  const spaceContainerRef = React.useRef<HTMLDivElement | null>(null)
 
   const handleAddNote = useCallback(
     (event: MouseEvent) => {
       if (mode == Mode.Add) {
-        if(!noPanRef.current!.contains(event.target as Node))
-        {
+        if (!noPanRef.current!.contains(event.target as Node)) {
           const createCords: CordsPair = {
             xCord: event.pageX + spaceData.xCord,
             yCord: event.pageY + spaceData.yCord,
           }
           dispatch(addNote(createCords))
-        }   
+        }
       }
     },
     [mode, dispatch, spaceData.xCord, spaceData.yCord]
   )
 
   useEffect(() => {
-    const currentSpace = spaceContainer.current
-    if (mode == Mode.Move) {
+    const currentSpace = spaceContainerRef.current
+    if (mode == Mode.Move || mode == Mode.Grabbing ) {
       currentSpace?.removeEventListener("click", handleAddNote)
       spaceRef.current?.viewPort?.setBounds({
         x: [0, 10000],
@@ -80,6 +83,13 @@ const MainPage = () => {
     dispatch(setSpaceData(newSpaceData))
   }
 
+  const changeCursor = () => {
+    if (mode == Mode.Move)
+      dispatch(setMode(Mode.Grabbing))
+    else if (mode == Mode.Grabbing)
+      dispatch(setMode(Mode.Move))
+  }
+
   //document.addEventListener("wheel", updateZoom)
 
   return (
@@ -88,7 +98,13 @@ const MainPage = () => {
       onTouchEnd={() => updateCords()}
       onWheel={() => updateZoom}
     >
-      <SpaceContainer ref={spaceContainer}>
+      <SpaceContainer
+        ref={spaceContainerRef}
+        onMouseDown={changeCursor}
+        onTouchStart={changeCursor}
+        onMouseUp={changeCursor}
+        onTouchEnd={changeCursor}
+      >
         <Space
           onCreate={(vp) => {
             vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] })
@@ -100,7 +116,7 @@ const MainPage = () => {
           }}
           ref={spaceRef}
         >
-          <BackgroundImg $mode = {mode}>
+          <BackgroundImg $mode={mode}>
             <NoPanContainer ref={noPanRef}>
               <NoPanArea>
                 {notesData.map((note: NoteData) => (

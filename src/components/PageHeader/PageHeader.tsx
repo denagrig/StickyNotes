@@ -28,7 +28,7 @@ const PageHeader = () => {
 
   return (
     <Buttons>
-      {curMode ? (
+      {curMode == Mode.Add ? (
         <>
           <LeftButtons color = {"lightBlue"} onClick={enableAddNote}>
           Добавить Заметку

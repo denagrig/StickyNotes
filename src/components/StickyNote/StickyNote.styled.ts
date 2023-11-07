@@ -15,7 +15,7 @@ export const Container = styled.div<{
   top: ${(props) => props.$top || "30px"};
   left: ${(props) => props.$left || "30px"};
   background: ${(props) => props.$color || "lightgreen"};
-  display: inline-block;
+  display: block;
   border-radius: 10px;
 `
 
@@ -24,7 +24,7 @@ export const MovableHeader = styled.div`
   height: 15px;
   color: black;
   padding: 0 0 10px 0;
-  width: 100%;
+  flex: 1;
   cursor: grab;
   @media (max-width: 1024px) {
     height: 35px;
@@ -32,19 +32,21 @@ export const MovableHeader = styled.div`
 `
 
 export const TextAreaContainer = styled.div`
+  width: 100%;
+  height: 100%;
 `
 
 export const TextArea = styled.textarea`
   width: 100%;
   height: 80%;
   box-sizing: border-box;
-  padding: 5px 10px 5px 10px;
+  padding: 0px 10px 0px 10px;
   line-height: 1.5;
   outline: none;
   resize: none;
   border: none;
   background: inherit;
-  owerflow: auto;
+  overflow: auto;
   @media (max-width: 1024px) {
     font-size: 25px;
   }
@@ -65,7 +67,6 @@ export const DeleteButton = styled.div`
   cursor: pointer;
   @media (max-width: 1024px) {
     height: 35px;
-    width: 60px;
   }
 `
 
@@ -99,10 +100,8 @@ export const ChangeColorContainer = styled.div`
   padding: 0 0 10px 0;
   width: 30px;
   line-height: 15px;
-  font-size: 30px;
   @media (max-width: 1024px) {
     height: 35px;
-    width: 65px;
   }
 `
 
@@ -122,8 +121,8 @@ export const BrushIcon = styled(FontAwesomeIcon)`
   pointer-events: none;
   @media (max-width: 1024px) {
     top: 8px;
-    left: 8px;
-    font-size: 1.8rem;
+    left: 0px;
+    font-size: 1.5rem;
   }
 `
 
@@ -132,6 +131,6 @@ export const DeleteIcon = styled(FontAwesomeIcon)`
   position: relative;
   @media (max-width: 1024px) {
     top: 8px;
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 `

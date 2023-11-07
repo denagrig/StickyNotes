@@ -9,7 +9,18 @@ export const BackgroundImg = styled.div<{
   background-image: url(${background});
   background-repeat:repeat;
   position: absolute;
-  cursor: ${(props) => props.$mode === Mode.Move ? "grab" : "copy"};
+  cursor: ${props => {
+    const mode = props.$mode
+    if (mode == Mode.Move) {
+      return "grab"
+    }
+    else if (mode == Mode.Add) {
+      return "copy"
+    }
+    else{
+      return "grabbing"
+    }
+  }};
   width: 10000px;
   height: 10000px;
 `
