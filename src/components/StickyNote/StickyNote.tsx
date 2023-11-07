@@ -112,7 +112,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
       } else {
         document.removeEventListener("mousemove", onMove)
       }
-      
+
       const newNote = Object.assign({}, noteChanges)
       newNote.xCord = noteRef.current!.style.left
       newNote.yCord = noteRef.current!.style.top
@@ -144,8 +144,6 @@ const StickyNote = ({ note }: { note: NoteData }) => {
         noteRef.current!.style.width = width + (pageX - shiftRef.current.xCord) / spaceData.zoomFactor + "px"
       if (height + (pageY - shiftRef.current.yCord) / spaceData.zoomFactor >= noteMinSize.height)
           noteRef.current!.style.height = height + (pageY - shiftRef.current.yCord) / spaceData.zoomFactor + "px"
-      //page X - место нажатия, width - правй ыерзний угол заметки
-      console.log(height, noteRef.current!.style.height, noteChanges.height)
     },
     [noteChanges.height, noteChanges.width, spaceData.zoomFactor]
   )
@@ -196,7 +194,6 @@ const StickyNote = ({ note }: { note: NoteData }) => {
         processedEvent.clientX
       shiftRef.current.yCord =
         processedEvent.clientY
-      console.log(shiftRef.current.xCord)
     },
     [onResize, resizePressEnd]
   )
