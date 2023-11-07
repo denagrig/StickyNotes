@@ -25,6 +25,7 @@ import { useAppSelector } from "src/hooks"
 
 const StickyNote = ({ note }: { note: NoteData }) => {
   const noteRef = useRef<HTMLHeadingElement>(null)
+  const resizeRef = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch<AppDispatch>()
   const spaceData: VpData = useAppSelector((state) => state.space.vpData)
   const shiftRef = React.useRef<CordsPair>({
@@ -138,16 +139,16 @@ const StickyNote = ({ note }: { note: NoteData }) => {
 
   const resize = useCallback(
     (pageX: number, pageY: number) => {
-      const width = noteRef.current!.getBoundingClientRect().left
-      const height = noteRef.current!.getBoundingClientRect().top
-      if ((pageX - width)/ spaceData.zoomFactor >= noteMinSize.width)
-        noteRef.current!.style.width =
-          (pageX - width) / spaceData.zoomFactor + "px"
-      if ((pageY - height) / spaceData.zoomFactor >= noteMinSize.height)
-        noteRef.current!.style.height =
-          (pageY - height) / spaceData.zoomFactor + "px"
+      const width = parseFloat(noteChanges.width.replace("px", ""))
+      const height = parseFloat(noteChanges.height.replace("px", ""))
+      if (width + (pageX - shiftRef.current.xCord) / spaceData.zoomFactor >= noteMinSize.width)
+        noteRef.current!.style.width = width + (pageX - shiftRef.current.xCord) / spaceData.zoomFactor + "px"
+      if (height + (pageY - shiftRef.current.yCord) / spaceData.zoomFactor >= noteMinSize.height)
+          noteRef.current!.style.height = height + (pageY - shiftRef.current.yCord) / spaceData.zoomFactor + "px"
+      //page X - место нажатия, width - правй ыерзний угол заметки
+      console.log(height, noteRef.current!.style.height, noteChanges.height)
     },
-    [spaceData.zoomFactor]
+    [noteChanges.height, noteChanges.width, spaceData.zoomFactor]
   )
 
   const onResize = useCallback(
@@ -163,11 +164,20 @@ const StickyNote = ({ note }: { note: NoteData }) => {
 
   const resizePressStart = useCallback(
     (event: React.MouseEvent | React.TouchEvent) => {
+      let processedEvent
       if ("touches" in event) {
+        processedEvent = event.touches[0]
         document.addEventListener("touchmove", onResize)
       } else {
+        processedEvent = event
         document.addEventListener("mousemove", onResize)
       }
+
+      shiftRef.current.xCord = 
+        processedEvent.clientX
+      shiftRef.current.yCord =
+        processedEvent.clientY
+      console.log(shiftRef.current.xCord)
     },
     [onResize]
   )
@@ -230,6 +240,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
         <TextArea defaultValue={note.text} onChange={handleTextChange} />
       </TextAreaContainer>
       <Resize
+        ref = {resizeRef}
         onMouseDown={resizePressStart}
         onTouchStart={resizePressStart}
         onMouseUp={resizePressEnd}
