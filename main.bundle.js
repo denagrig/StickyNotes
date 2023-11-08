@@ -23356,13 +23356,11 @@ const Container = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div 
   top: ${(props) => props.$top || "30px"};
   left: ${(props) => props.$left || "30px"};
   background: ${(props) => props.$color || "lightgreen"};
-  display: block;
   border-radius: 10px;
 `;
 const MovableHeader = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
   border-bottom: 2px solid #333;
   height: 15px;
-  color: black;
   padding: 0 0 10px 0;
   flex: 1;
   cursor: grab;
@@ -23373,12 +23371,13 @@ const MovableHeader = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].
 const TextAreaContainer = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
+  padding: 10px 10px 0px 10px;
 `;
 const TextArea = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].textarea `
   width: 100%;
   height: 80%;
   box-sizing: border-box;
-  padding: 0px 10px 0px 10px;
   line-height: 1.5;
   outline: none;
   resize: none;
@@ -23422,15 +23421,14 @@ const Resize = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
   @media (max-width: 1024px) {
     height: 20px;
     width: 20px;
-    right: -10px;
-    bottom: -10px;
+    right: -12px;
+    bottom: -12px;
   }
 `;
 const ChangeColorContainer = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
   border-bottom: 2px solid #333;
   border-right: 2px solid #333;
   height: 15px;
-  color: black;
   padding: 0 0 10px 0;
   width: 30px;
   line-height: 15px;
@@ -23634,6 +23632,7 @@ const StickyNote = ({ note }) => {
         }
         else {
             processedEvent = event;
+            processedEvent.preventDefault();
             document.addEventListener("mousemove", onResize);
             document.addEventListener("mouseup", resizePressEnd);
         }
