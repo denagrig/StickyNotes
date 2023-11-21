@@ -15,14 +15,12 @@ export const Container = styled.div<{
   top: ${(props) => props.$top || "30px"};
   left: ${(props) => props.$left || "30px"};
   background: ${(props) => props.$color || "lightgreen"};
-  display: block;
   border-radius: 10px;
 `
 
 export const MovableHeader = styled.div`
   border-bottom: 2px solid #333;
   height: 15px;
-  color: black;
   padding: 0 0 10px 0;
   flex: 1;
   cursor: grab;
@@ -34,13 +32,14 @@ export const MovableHeader = styled.div`
 export const TextAreaContainer = styled.div`
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
+  padding: 10px 10px 0px 10px;
 `
 
 export const TextArea = styled.textarea`
   width: 100%;
   height: 80%;
   box-sizing: border-box;
-  padding: 0px 10px 0px 10px;
   line-height: 1.5;
   outline: none;
   resize: none;
@@ -87,8 +86,8 @@ export const Resize = styled.div`
   @media (max-width: 1024px) {
     height: 20px;
     width: 20px;
-    right: -10px;
-    bottom: -10px;
+    right: -12px;
+    bottom: -12px;
   }
 `
 
@@ -96,7 +95,6 @@ export const ChangeColorContainer = styled.div`
   border-bottom: 2px solid #333;
   border-right: 2px solid #333;
   height: 15px;
-  color: black;
   padding: 0 0 10px 0;
   width: 30px;
   line-height: 15px;

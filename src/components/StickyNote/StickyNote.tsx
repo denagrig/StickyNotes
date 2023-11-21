@@ -186,6 +186,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
         document.addEventListener("touchend", resizePressEnd)
       } else {
         processedEvent = event
+        processedEvent.preventDefault()
         document.addEventListener("mousemove", onResize)
         document.addEventListener("mouseup", resizePressEnd)
       }
