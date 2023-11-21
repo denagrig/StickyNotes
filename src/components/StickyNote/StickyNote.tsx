@@ -77,35 +77,8 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     [moveAt]
   )
 
-  const noteHeaderPressStart = useCallback(
-    (event: React.MouseEvent | React.TouchEvent) => {
-      let processedEvent
-      headerRef.current!.style.cursor = "grabbing"
-      dispatch(maxZIndex(note.id))
-      if ("touches" in event) {
-        processedEvent = event.touches[0]
-        document.addEventListener("touchmove", onMove)
-      } else {
-        processedEvent = event
-        document.addEventListener("mousemove", onMove)
-      }
-
-      shiftRef.current.xCord =
-        processedEvent.clientX -
-        noteRef.current!.getBoundingClientRect().left -
-        spaceData.xCord
-      shiftRef.current.yCord =
-        processedEvent.clientY -
-        noteRef.current!.getBoundingClientRect().top -
-        spaceData.yCord
-
-      moveAt(processedEvent.pageX, processedEvent.pageY)
-    },
-    [dispatch, moveAt, note.id, onMove, spaceData]
-  )
-
   const noteHeaderPressEnd = useCallback(
-    (event: React.MouseEvent | React.TouchEvent) => {
+    (event: MouseEvent | TouchEvent) => {
       headerRef.current!.style.cursor = "grab"
       if ("touches" in event) {
         document.removeEventListener("touchmove", onMove)
@@ -120,6 +93,36 @@ const StickyNote = ({ note }: { note: NoteData }) => {
       dispatch(setNoteData(newNote))
     },
     [dispatch, noteChanges, onMove]
+  )
+
+  const noteHeaderPressStart = useCallback(
+    (event: React.MouseEvent | React.TouchEvent) => {
+      let processedEvent
+      headerRef.current!.style.cursor = "grabbing"
+      dispatch(maxZIndex(note.id))
+      if ("touches" in event) {
+        processedEvent = event.touches[0]
+        document.addEventListener("touchmove", onMove)
+        document.addEventListener("touchend", noteHeaderPressEnd)
+      } else {
+        processedEvent = event
+        processedEvent.preventDefault()
+        document.addEventListener("mousemove", onMove)
+        document.addEventListener("mouseup", noteHeaderPressEnd)
+      }
+
+      shiftRef.current.xCord =
+        processedEvent.clientX -
+        noteRef.current!.getBoundingClientRect().left -
+        spaceData.xCord
+      shiftRef.current.yCord =
+        processedEvent.clientY -
+        noteRef.current!.getBoundingClientRect().top -
+        spaceData.yCord
+
+      moveAt(processedEvent.pageX, processedEvent.pageY)
+    },
+    [dispatch, moveAt, note.id, noteHeaderPressEnd, onMove, spaceData]
   )
 
   const handleTextChange = useCallback(
@@ -231,8 +234,6 @@ const StickyNote = ({ note }: { note: NoteData }) => {
           ref = {headerRef}
           onMouseDown={noteHeaderPressStart}
           onTouchStart={noteHeaderPressStart}
-          onMouseUp={noteHeaderPressEnd}
-          onTouchEnd={noteHeaderPressEnd}
         />
         <DeleteButton onClick={handleDelete}>
           <DeleteIcon icon={faMinus} />

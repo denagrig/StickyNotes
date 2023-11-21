@@ -13,7 +13,7 @@ import {
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "src/store"
 import { setMode, setSpaceData } from "src/slices/spaceSlice"
-import React, { useCallback, useEffect } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { Mode } from "src/data"
 import { addNote } from "src/slices/noteSlice"
 
@@ -25,43 +25,80 @@ const MainPage = () => {
   const spaceRef = React.useRef<Space | null>(null)
   const noPanRef = React.useRef<HTMLDivElement | null>(null)
   const spaceContainerRef = React.useRef<HTMLDivElement | null>(null)
+  const [eventStartCords, setEventStartCords] = useState<CordsPair>({
+    xCord: 0,
+    yCord: 0,
+  })
 
-  const handleAddNote = useCallback(
-    (event: MouseEvent) => {
+  const handlePressStart = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      let processedEvent
+
+      if ("touches" in event) {
+        processedEvent = event.touches[0]
+      } else {
+        processedEvent = event
+      }
+
+      const currentCords: CordsPair = {
+        xCord: processedEvent.pageX,
+        yCord: processedEvent.pageY,
+      }
+
+      setEventStartCords(currentCords)
+    },
+    []
+  )
+
+  const handlePressEnd = useCallback(
+    (event: MouseEvent | TouchEvent) => {
       if (mode == Mode.Add) {
-        if (!noPanRef.current!.contains(event.target as Node)) {
+        let processedEvent
+
+        if ("touches" in event) {
+          processedEvent = event.touches[0]
+        } else {
+          processedEvent = event
+        }
+
+        if (
+          !noPanRef.current!.contains(event.target as Node) &&
+          eventStartCords.xCord == processedEvent.pageX &&
+          eventStartCords.yCord == processedEvent.pageY
+        ) {
           const createCords: CordsPair = {
-            xCord: event.pageX + spaceData.xCord,
-            yCord: event.pageY + spaceData.yCord,
+            xCord: processedEvent.pageX + spaceData.xCord,
+            yCord: processedEvent.pageY + spaceData.yCord,
           }
           dispatch(addNote(createCords))
         }
       }
     },
-    [mode, dispatch, spaceData.xCord, spaceData.yCord]
+    [
+      dispatch,
+      eventStartCords.xCord,
+      eventStartCords.yCord,
+      mode,
+      spaceData.xCord,
+      spaceData.yCord,
+    ]
   )
 
   useEffect(() => {
     const currentSpace = spaceContainerRef.current
-    if (mode == Mode.Move || mode == Mode.Grabbing ) {
-      currentSpace?.removeEventListener("click", handleAddNote)
-      spaceRef.current?.viewPort?.setBounds({
-        x: [0, 10000],
-        y: [0, 10000],
-        zoom: [1, 1],
-      })
-    } else {
-      spaceRef.current?.viewPort?.setBounds({
-        x: [spaceData.xCord, spaceData.xCord + window.innerWidth],
-        y: [spaceData.yCord, spaceData.yCord + window.innerHeight],
-        zoom: [spaceData.zoomFactor, spaceData.zoomFactor],
-      })
-      currentSpace?.addEventListener("click", handleAddNote)
+    if (mode == Mode.Add) {
+      currentSpace?.addEventListener("mousedown", handlePressStart)
+      currentSpace?.addEventListener("touchstart", handlePressStart)
+      currentSpace?.addEventListener("mouseup", handlePressEnd)
+      currentSpace?.addEventListener("touchend", handlePressEnd)
     }
     return () => {
-      currentSpace?.removeEventListener("click", handleAddNote)
+      currentSpace?.removeEventListener("mousedown", handlePressStart)
+      currentSpace?.removeEventListener("touchstart", handlePressStart)
+      currentSpace?.removeEventListener("mouseup", handlePressEnd)
+      currentSpace?.removeEventListener("touchend", handlePressEnd)
     }
-  }, [mode, spaceData, handleAddNote])
+  }, [handlePressEnd, handlePressStart, mode, spaceData])
 
   const updateCords = () => {
     const newSpaceData: VpData = {
@@ -84,10 +121,8 @@ const MainPage = () => {
   }
 
   const changeCursor = () => {
-    if (mode == Mode.Move)
-      dispatch(setMode(Mode.Grabbing))
-    else if (mode == Mode.Grabbing)
-      dispatch(setMode(Mode.Move))
+    if (mode == Mode.Move) dispatch(setMode(Mode.Grabbing))
+    else if (mode == Mode.Grabbing) dispatch(setMode(Mode.Move))
   }
 
   //document.addEventListener("wheel", updateZoom)

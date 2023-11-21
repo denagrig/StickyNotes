@@ -1,3 +1,4 @@
+import { colors } from "src/data"
 import { CordsPair, NoteData } from "src/types"
 
 export const saveNote = async (noteData: NoteData) => {
@@ -36,6 +37,7 @@ export const pushNote = async (cords: CordsPair) => {
     const notesRecord: NoteData[] = JSON.parse(
       localStorage.getItem("notesRecord") || "[]"
     )
+    const randomColor = colors[Math.floor(Math.random() * colors.length)]
 
     let notesId: number = JSON.parse(localStorage.getItem("notesID") || "0")
     const newNote: NoteData = {
@@ -45,7 +47,7 @@ export const pushNote = async (cords: CordsPair) => {
       height: "300px",
       width: "300px",
       text: "",
-      color: "lightgreen",
+      color: randomColor,
     }
     console.log("note pushed")
     notesRecord.push(newNote)
