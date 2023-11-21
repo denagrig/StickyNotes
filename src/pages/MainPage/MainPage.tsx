@@ -142,7 +142,7 @@ const MainPage = () => {
       >
         <Space
           onCreate={(vp) => {
-            vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] })
+            vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [1, 1] })
             vp.camera.moveBy(
               spaceData.xCord,
               spaceData.yCord,
