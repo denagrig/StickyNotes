@@ -2,33 +2,27 @@ import styled from "styled-components"
 import background from "src/assets/background.jpg"
 import { Mode } from "src/data"
 
-
 export const BackgroundImg = styled.div<{
   $mode?: Mode;
 }>`
   background-image: url(${background});
-  background-repeat:repeat;
+  background-repeat: repeat;
   position: absolute;
-  cursor: ${props => {
+  cursor: ${(props) => {
     const mode = props.$mode
     if (mode == Mode.Move) {
       return "grab"
-    }
-    else if (mode == Mode.Add) {
+    } else if (mode == Mode.Add) {
       return "copy"
-    }
-    else{
+    } else {
       return "grabbing"
     }
   }};
   width: 10000px;
   height: 10000px;
 `
-export const MainPageContainer = styled.div`
-`
+export const MainPageContainer = styled.div``
 
-export const SpaceContainer = styled.div`
-`
+export const SpaceContainer = styled.div``
 
-export const NoPanContainer = styled.div`
-`
+export const NoPanContainer = styled.div``

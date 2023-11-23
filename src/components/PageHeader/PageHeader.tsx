@@ -30,20 +30,22 @@ const PageHeader = () => {
     <Buttons>
       {curMode == Mode.Add ? (
         <>
-          <LeftButtons color = {"lightBlue"} onClick={enableAddNote}>
-          Добавить Заметку
-          </LeftButtons>
-          <LeftButtons color = {"grey"} onClick={enableMovement}>
-          Режим перемещения
-          </LeftButtons>
-        </>) : (
-        <>
-          <LeftButtons color = {"grey"} onClick={enableAddNote}>
+          <LeftButtons color={"lightBlue"} onClick={enableAddNote}>
             Добавить Заметку
           </LeftButtons>
-          <LeftButtons color = {"lightBlue"} onClick={enableMovement}>
+          <LeftButtons color={"grey"} onClick={enableMovement}>
             Режим перемещения
-          </LeftButtons></>
+          </LeftButtons>
+        </>
+      ) : (
+        <>
+          <LeftButtons color={"grey"} onClick={enableAddNote}>
+            Добавить Заметку
+          </LeftButtons>
+          <LeftButtons color={"lightBlue"} onClick={enableMovement}>
+            Режим перемещения
+          </LeftButtons>
+        </>
       )}
       <ClearButton onClick={handleClear}>Очистить</ClearButton>
     </Buttons>

@@ -10,7 +10,7 @@ import {
   ChangeColorInput,
   BrushIcon,
   TextAreaContainer,
-  DeleteIcon
+  DeleteIcon,
 } from "src/components/StickyNote/StickyNote.styled"
 import { deleteNote, maxZIndex, setNoteData } from "src/slices/noteSlice"
 import { AppDispatch } from "src/store"
@@ -39,7 +39,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     height: note.height,
     width: note.width,
     text: note.text,
-    color: note.color
+    color: note.color,
   })
 
   Coloris.init()
@@ -61,10 +61,19 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     ],
   })
 
-  const moveAt = useCallback((pageX: number, pageY: number) => {
-    noteRef.current!.style.left = pageX - shiftRef.current.xCord + "px"
-    noteRef.current!.style.top = pageY - shiftRef.current.yCord + "px"
-  }, [])
+  const moveAt = useCallback(
+    (pageX: number, pageY: number) => {
+      noteRef.current!.style.left =
+        (pageX - shiftRef.current.xCord) / spaceData.zoomFactor +
+        spaceData.xCord +
+        "px"
+      noteRef.current!.style.top =
+        (pageY - shiftRef.current.yCord) / spaceData.zoomFactor +
+        spaceData.yCord +
+        "px"
+    },
+    [spaceData]
+  )
 
   const onMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
@@ -82,8 +91,10 @@ const StickyNote = ({ note }: { note: NoteData }) => {
       headerRef.current!.style.cursor = "grab"
       if ("touches" in event) {
         document.removeEventListener("touchmove", onMove)
+        document.removeEventListener("touchend", noteHeaderPressEnd)
       } else {
         document.removeEventListener("mousemove", onMove)
+        document.removeEventListener("mouseup", noteHeaderPressEnd)
       }
 
       const newNote = Object.assign({}, noteChanges)
@@ -112,17 +123,11 @@ const StickyNote = ({ note }: { note: NoteData }) => {
       }
 
       shiftRef.current.xCord =
-        processedEvent.clientX -
-        noteRef.current!.getBoundingClientRect().left -
-        spaceData.xCord
+        processedEvent.clientX - noteRef.current!.getBoundingClientRect().left
       shiftRef.current.yCord =
-        processedEvent.clientY -
-        noteRef.current!.getBoundingClientRect().top -
-        spaceData.yCord
-
-      moveAt(processedEvent.pageX, processedEvent.pageY)
+        processedEvent.clientY - noteRef.current!.getBoundingClientRect().top
     },
-    [dispatch, moveAt, note.id, noteHeaderPressEnd, onMove, spaceData]
+    [dispatch, note.id, noteHeaderPressEnd, onMove]
   )
 
   const handleTextChange = useCallback(
@@ -143,10 +148,22 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     (pageX: number, pageY: number) => {
       const width = parseFloat(noteChanges.width.replace("px", ""))
       const height = parseFloat(noteChanges.height.replace("px", ""))
-      if (width + (pageX - shiftRef.current.xCord) / spaceData.zoomFactor >= noteMinSize.width)
-        noteRef.current!.style.width = width + (pageX - shiftRef.current.xCord) / spaceData.zoomFactor + "px"
-      if (height + (pageY - shiftRef.current.yCord) / spaceData.zoomFactor >= noteMinSize.height)
-          noteRef.current!.style.height = height + (pageY - shiftRef.current.yCord) / spaceData.zoomFactor + "px"
+      if (
+        width + (pageX - shiftRef.current.xCord) / spaceData.zoomFactor >=
+        noteMinSize.width
+      )
+        noteRef.current!.style.width =
+          width +
+          (pageX - shiftRef.current.xCord) / spaceData.zoomFactor +
+          "px"
+      if (
+        height + (pageY - shiftRef.current.yCord) / spaceData.zoomFactor >=
+        noteMinSize.height
+      )
+        noteRef.current!.style.height =
+          height +
+          (pageY - shiftRef.current.yCord) / spaceData.zoomFactor +
+          "px"
     },
     [noteChanges.height, noteChanges.width, spaceData.zoomFactor]
   )
@@ -194,10 +211,8 @@ const StickyNote = ({ note }: { note: NoteData }) => {
         document.addEventListener("mouseup", resizePressEnd)
       }
 
-      shiftRef.current.xCord = 
-        processedEvent.clientX
-      shiftRef.current.yCord =
-        processedEvent.clientY
+      shiftRef.current.xCord = processedEvent.clientX
+      shiftRef.current.yCord = processedEvent.clientY
     },
     [onResize, resizePressEnd]
   )
@@ -231,7 +246,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
           <BrushIcon icon={faPaintBrush} />
         </ChangeColorContainer>
         <MovableHeader
-          ref = {headerRef}
+          ref={headerRef}
           onMouseDown={noteHeaderPressStart}
           onTouchStart={noteHeaderPressStart}
         />
@@ -242,10 +257,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
       <TextAreaContainer>
         <TextArea defaultValue={note.text} onChange={handleTextChange} />
       </TextAreaContainer>
-      <Resize
-        onMouseDown={resizePressStart}
-        onTouchStart={resizePressStart}
-      />
+      <Resize onMouseDown={resizePressStart} onTouchStart={resizePressStart} />
     </Container>
   )
 }

@@ -92,7 +92,7 @@ export const moveToTop = async (id: number) => {
     const notesRecord: NoteData[] = JSON.parse(
       localStorage.getItem("notesRecord") || "[]"
     )
-    let noteData : NoteData = notesRecord[0]
+    let noteData: NoteData = notesRecord[0]
     notesRecord.map((note) => {
       if (note.id == id) {
         noteData = notesRecord[curPos]
@@ -103,7 +103,7 @@ export const moveToTop = async (id: number) => {
     curPos = 0
     notesRecord.map((note) => {
       if (curPos > notePos) {
-        notesRecord[curPos-1] = note
+        notesRecord[curPos - 1] = note
       }
       curPos++
     })

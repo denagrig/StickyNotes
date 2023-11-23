@@ -6,8 +6,7 @@ export const Buttons = styled.div`
 
 export const LeftButtons = styled.button`
   padding: 10px;
-  background: ${(props) =>
-    props.color === "grey" ? "#ededed" : "#add8e6"};
+  background: ${(props) => (props.color === "grey" ? "#ededed" : "#add8e6")};
   color: black;
   border-radius: 10px;
   cursor: pointer;

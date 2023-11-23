@@ -30,25 +30,21 @@ const MainPage = () => {
     yCord: 0,
   })
 
-  const handlePressStart = useCallback(
-    (event: MouseEvent | TouchEvent) => {
-      let processedEvent
+  const handlePressStart = useCallback((event: MouseEvent | TouchEvent) => {
+    let processedEvent
 
-      if ("touches" in event) {
-        processedEvent = event.touches[0]
-      } else {
-        processedEvent = event
-      }
+    if ("touches" in event) {
+      processedEvent = event.touches[0]
+    } else {
+      processedEvent = event
+    }
 
-      const currentCords: CordsPair = {
-        xCord: processedEvent.pageX,
-        yCord: processedEvent.pageY,
-      }
-
-      setEventStartCords(currentCords)
-    },
-    []
-  )
+    const currentCords: CordsPair = {
+      xCord: processedEvent.pageX,
+      yCord: processedEvent.pageY,
+    }
+    setEventStartCords(currentCords)
+  }, [])
 
   const handlePressEnd = useCallback(
     (event: MouseEvent | TouchEvent) => {
@@ -56,7 +52,7 @@ const MainPage = () => {
         let processedEvent
 
         if ("touches" in event) {
-          processedEvent = event.touches[0]
+          processedEvent = event.changedTouches[0]
         } else {
           processedEvent = event
         }
@@ -84,8 +80,19 @@ const MainPage = () => {
     ]
   )
 
+  const updateSpaceData = useCallback(() => {
+    const newSpaceData: VpData = {
+      xCord: spaceRef.current?.viewPort?.left || 0,
+      yCord: spaceRef.current?.viewPort?.top || 0,
+      zoomFactor: spaceRef.current?.viewPort?.zoomFactor || 1,
+    }
+
+    dispatch(setSpaceData(newSpaceData))
+  }, [dispatch])
+
   useEffect(() => {
     const currentSpace = spaceContainerRef.current
+    document.addEventListener("wheel", updateSpaceData)
     if (mode == Mode.Add) {
       currentSpace?.addEventListener("mousedown", handlePressStart)
       currentSpace?.addEventListener("touchstart", handlePressStart)
@@ -97,41 +104,19 @@ const MainPage = () => {
       currentSpace?.removeEventListener("touchstart", handlePressStart)
       currentSpace?.removeEventListener("mouseup", handlePressEnd)
       currentSpace?.removeEventListener("touchend", handlePressEnd)
+      document.removeEventListener("wheel", updateSpaceData)
     }
-  }, [handlePressEnd, handlePressStart, mode, spaceData])
-
-  const updateCords = () => {
-    const newSpaceData: VpData = {
-      xCord: spaceRef.current?.viewPort?.left || 0,
-      yCord: spaceRef.current?.viewPort?.top || 0,
-      zoomFactor: 1,
-      //zoomFactor: spaceData.zoomFactor
-    }
-    dispatch(setSpaceData(newSpaceData))
-  }
-
-  const updateZoom = () => {
-    const newSpaceData: VpData = {
-      xCord: spaceData.xCord,
-      yCord: spaceData.yCord,
-      zoomFactor: spaceRef.current?.viewPort?.zoomFactor as number,
-    }
-    console.log(spaceRef.current?.viewPort?.zoomFactor)
-    dispatch(setSpaceData(newSpaceData))
-  }
+  }, [handlePressEnd, handlePressStart, mode, spaceData, updateSpaceData])
 
   const changeCursor = () => {
     if (mode == Mode.Move) dispatch(setMode(Mode.Grabbing))
     else if (mode == Mode.Grabbing) dispatch(setMode(Mode.Move))
   }
 
-  //document.addEventListener("wheel", updateZoom)
-
   return (
     <MainPageContainer
-      onMouseUp={() => updateCords()}
-      onTouchEnd={() => updateCords()}
-      onWheel={() => updateZoom}
+      onMouseUp={() => updateSpaceData()}
+      onTouchEnd={() => updateSpaceData()}
     >
       <SpaceContainer
         ref={spaceContainerRef}
@@ -142,12 +127,9 @@ const MainPage = () => {
       >
         <Space
           onCreate={(vp) => {
-            vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [1, 1] })
-            vp.camera.moveBy(
-              spaceData.xCord,
-              spaceData.yCord,
-              1 - spaceData.zoomFactor
-            )
+            vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] })
+            vp.camera.moveBy(0, 0, spaceData.zoomFactor - 1)
+            vp.camera.moveBy(spaceData.xCord, spaceData.yCord)
           }}
           ref={spaceRef}
         >
