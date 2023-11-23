@@ -23232,7 +23232,7 @@ const Buttons = styled_components__WEBPACK_IMPORTED_MODULE_0__["default"].div `
 `;
 const LeftButtons = styled_components__WEBPACK_IMPORTED_MODULE_0__["default"].button `
   padding: 10px;
-  background: ${(props) => props.color === "grey" ? "#ededed" : "#add8e6"};
+  background: ${(props) => (props.color === "grey" ? "#ededed" : "#add8e6")};
   color: black;
   border-radius: 10px;
   cursor: pointer;
@@ -23516,7 +23516,7 @@ const StickyNote = ({ note }) => {
         height: note.height,
         width: note.width,
         text: note.text,
-        color: note.color
+        color: note.color,
     });
     _melloware_coloris__WEBPACK_IMPORTED_MODULE_7__["default"].init();
     _melloware_coloris__WEBPACK_IMPORTED_MODULE_7__["default"].coloris({
@@ -23537,9 +23537,15 @@ const StickyNote = ({ note }) => {
         ],
     });
     const moveAt = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((pageX, pageY) => {
-        noteRef.current.style.left = pageX - shiftRef.current.xCord + "px";
-        noteRef.current.style.top = pageY - shiftRef.current.yCord + "px";
-    }, []);
+        noteRef.current.style.left =
+            (pageX - shiftRef.current.xCord) / spaceData.zoomFactor +
+                spaceData.xCord +
+                "px";
+        noteRef.current.style.top =
+            (pageY - shiftRef.current.yCord) / spaceData.zoomFactor +
+                spaceData.yCord +
+                "px";
+    }, [spaceData]);
     const onMove = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         if ("touches" in event) {
             moveAt(event.touches[0].pageX, event.touches[0].pageY);
@@ -23552,9 +23558,11 @@ const StickyNote = ({ note }) => {
         headerRef.current.style.cursor = "grab";
         if ("touches" in event) {
             document.removeEventListener("touchmove", onMove);
+            document.removeEventListener("touchend", noteHeaderPressEnd);
         }
         else {
             document.removeEventListener("mousemove", onMove);
+            document.removeEventListener("mouseup", noteHeaderPressEnd);
         }
         const newNote = Object.assign({}, noteChanges);
         newNote.xCord = noteRef.current.style.left;
@@ -23577,15 +23585,10 @@ const StickyNote = ({ note }) => {
             document.addEventListener("mouseup", noteHeaderPressEnd);
         }
         shiftRef.current.xCord =
-            processedEvent.clientX -
-                noteRef.current.getBoundingClientRect().left -
-                spaceData.xCord;
+            processedEvent.clientX - noteRef.current.getBoundingClientRect().left;
         shiftRef.current.yCord =
-            processedEvent.clientY -
-                noteRef.current.getBoundingClientRect().top -
-                spaceData.yCord;
-        moveAt(processedEvent.pageX, processedEvent.pageY);
-    }, [dispatch, moveAt, note.id, noteHeaderPressEnd, onMove, spaceData]);
+            processedEvent.clientY - noteRef.current.getBoundingClientRect().top;
+    }, [dispatch, note.id, noteHeaderPressEnd, onMove]);
     const handleTextChange = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         const newNote = Object.assign({}, noteChanges);
         newNote.text = event.target.value;
@@ -23598,10 +23601,18 @@ const StickyNote = ({ note }) => {
     const resize = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((pageX, pageY) => {
         const width = parseFloat(noteChanges.width.replace("px", ""));
         const height = parseFloat(noteChanges.height.replace("px", ""));
-        if (width + (pageX - shiftRef.current.xCord) / spaceData.zoomFactor >= src_data__WEBPACK_IMPORTED_MODULE_5__.noteMinSize.width)
-            noteRef.current.style.width = width + (pageX - shiftRef.current.xCord) / spaceData.zoomFactor + "px";
-        if (height + (pageY - shiftRef.current.yCord) / spaceData.zoomFactor >= src_data__WEBPACK_IMPORTED_MODULE_5__.noteMinSize.height)
-            noteRef.current.style.height = height + (pageY - shiftRef.current.yCord) / spaceData.zoomFactor + "px";
+        if (width + (pageX - shiftRef.current.xCord) / spaceData.zoomFactor >=
+            src_data__WEBPACK_IMPORTED_MODULE_5__.noteMinSize.width)
+            noteRef.current.style.width =
+                width +
+                    (pageX - shiftRef.current.xCord) / spaceData.zoomFactor +
+                    "px";
+        if (height + (pageY - shiftRef.current.yCord) / spaceData.zoomFactor >=
+            src_data__WEBPACK_IMPORTED_MODULE_5__.noteMinSize.height)
+            noteRef.current.style.height =
+                height +
+                    (pageY - shiftRef.current.yCord) / spaceData.zoomFactor +
+                    "px";
     }, [noteChanges.height, noteChanges.width, spaceData.zoomFactor]);
     const onResize = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         if ("touches" in event) {
@@ -23639,10 +23650,8 @@ const StickyNote = ({ note }) => {
             document.addEventListener("mousemove", onResize);
             document.addEventListener("mouseup", resizePressEnd);
         }
-        shiftRef.current.xCord =
-            processedEvent.clientX;
-        shiftRef.current.yCord =
-            processedEvent.clientY;
+        shiftRef.current.xCord = processedEvent.clientX;
+        shiftRef.current.yCord = processedEvent.clientY;
     }, [onResize, resizePressEnd]);
     const handleColorChange = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         const newNote = Object.assign({}, noteChanges);
@@ -23746,9 +23755,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const BackgroundImg = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
   background-image: url(${src_assets_background_jpg__WEBPACK_IMPORTED_MODULE_0__});
-  background-repeat:repeat;
+  background-repeat: repeat;
   position: absolute;
-  cursor: ${props => {
+  cursor: ${(props) => {
     const mode = props.$mode;
     if (mode == src_data__WEBPACK_IMPORTED_MODULE_1__.Mode.Move) {
         return "grab";
@@ -23763,12 +23772,9 @@ const BackgroundImg = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].
   width: 10000px;
   height: 10000px;
 `;
-const MainPageContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
-`;
-const SpaceContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
-`;
-const NoPanContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
-`;
+const MainPageContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div ``;
+const SpaceContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div ``;
+const NoPanContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div ``;
 
 
 /***/ }),
@@ -23840,7 +23846,7 @@ const MainPage = () => {
         if (mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Add) {
             let processedEvent;
             if ("touches" in event) {
-                processedEvent = event.touches[0];
+                processedEvent = event.changedTouches[0];
             }
             else {
                 processedEvent = event;
@@ -23863,8 +23869,17 @@ const MainPage = () => {
         spaceData.xCord,
         spaceData.yCord,
     ]);
+    const updateSpaceData = (0,react__WEBPACK_IMPORTED_MODULE_9__.useCallback)(() => {
+        const newSpaceData = {
+            xCord: spaceRef.current?.viewPort?.left || 0,
+            yCord: spaceRef.current?.viewPort?.top || 0,
+            zoomFactor: spaceRef.current?.viewPort?.zoomFactor || 1,
+        };
+        dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_8__.setSpaceData)(newSpaceData));
+    }, [dispatch]);
     (0,react__WEBPACK_IMPORTED_MODULE_9__.useEffect)(() => {
         const currentSpace = spaceContainerRef.current;
+        document.addEventListener("wheel", updateSpaceData);
         if (mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Add) {
             currentSpace?.addEventListener("mousedown", handlePressStart);
             currentSpace?.addEventListener("touchstart", handlePressStart);
@@ -23876,36 +23891,19 @@ const MainPage = () => {
             currentSpace?.removeEventListener("touchstart", handlePressStart);
             currentSpace?.removeEventListener("mouseup", handlePressEnd);
             currentSpace?.removeEventListener("touchend", handlePressEnd);
+            document.removeEventListener("wheel", updateSpaceData);
         };
-    }, [handlePressEnd, handlePressStart, mode, spaceData]);
-    const updateCords = () => {
-        const newSpaceData = {
-            xCord: spaceRef.current?.viewPort?.left || 0,
-            yCord: spaceRef.current?.viewPort?.top || 0,
-            zoomFactor: 1,
-            //zoomFactor: spaceData.zoomFactor
-        };
-        dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_8__.setSpaceData)(newSpaceData));
-    };
-    const updateZoom = () => {
-        const newSpaceData = {
-            xCord: spaceData.xCord,
-            yCord: spaceData.yCord,
-            zoomFactor: spaceRef.current?.viewPort?.zoomFactor,
-        };
-        console.log(spaceRef.current?.viewPort?.zoomFactor);
-        dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_8__.setSpaceData)(newSpaceData));
-    };
+    }, [handlePressEnd, handlePressStart, mode, spaceData, updateSpaceData]);
     const changeCursor = () => {
         if (mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Move)
             dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_8__.setMode)(src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Grabbing));
         else if (mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Grabbing)
             dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_8__.setMode)(src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Move));
     };
-    //document.addEventListener("wheel", updateZoom)
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.MainPageContainer, { onMouseUp: () => updateCords(), onTouchEnd: () => updateCords(), onWheel: () => updateZoom, children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.SpaceContainer, { ref: spaceContainerRef, onMouseDown: changeCursor, onTouchStart: changeCursor, onMouseUp: changeCursor, onTouchEnd: changeCursor, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.Space, { onCreate: (vp) => {
-                        vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [1, 1] });
-                        vp.camera.moveBy(spaceData.xCord, spaceData.yCord, 1 - spaceData.zoomFactor);
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.MainPageContainer, { onMouseUp: () => updateSpaceData(), onTouchEnd: () => updateSpaceData(), children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.SpaceContainer, { ref: spaceContainerRef, onMouseDown: changeCursor, onTouchStart: changeCursor, onMouseUp: changeCursor, onTouchEnd: changeCursor, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.Space, { onCreate: (vp) => {
+                        vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] });
+                        vp.camera.moveBy(0, 0, spaceData.zoomFactor - 1);
+                        vp.camera.moveBy(spaceData.xCord, spaceData.yCord);
                     }, ref: spaceRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.BackgroundImg, { "$mode": mode, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.NoPanContainer, { ref: noPanRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.NoPanArea, { children: notesData.map((note) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote__WEBPACK_IMPORTED_MODULE_1__["default"], { note: note }, note.id))) }) }) }) }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader__WEBPACK_IMPORTED_MODULE_5__["default"], {})] }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainPage);
