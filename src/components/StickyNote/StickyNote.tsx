@@ -26,6 +26,7 @@ import { useAppSelector } from "src/hooks"
 const StickyNote = ({ note }: { note: NoteData }) => {
   const noteRef = useRef<HTMLHeadingElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
   const dispatch = useDispatch<AppDispatch>()
   const spaceData: VpData = useAppSelector((state) => state.space.vpData)
   const shiftRef = React.useRef<CordsPair>({
@@ -39,6 +40,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     height: note.height,
     width: note.width,
     text: note.text,
+    fontSize: note.fontSize,
     color: note.color,
   })
 
@@ -133,6 +135,16 @@ const StickyNote = ({ note }: { note: NoteData }) => {
   const handleTextChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newNote = Object.assign({}, noteChanges)
+      if (textareaRef.current!.clientHeight < textareaRef.current!.scrollHeight) {
+        if(newNote.fontSize > 16)
+          newNote.fontSize -= 2
+        
+        else {
+          const width = parseFloat( newNote.width.replace("px", ""))
+          newNote.width = width + 30 + "px"
+        }
+        console.log( newNote.width)
+      }
       newNote.text = event.target.value
       setNoteChanges(newNote)
       dispatch(setNoteData(newNote))
@@ -255,7 +267,7 @@ const StickyNote = ({ note }: { note: NoteData }) => {
         </DeleteButton>
       </Header>
       <TextAreaContainer>
-        <TextArea defaultValue={note.text} onChange={handleTextChange} />
+        <TextArea $fontSize={note.fontSize} defaultValue={note.text} onChange={handleTextChange} ref = {textareaRef}/>
       </TextAreaContainer>
       <Resize onMouseDown={resizePressStart} onTouchStart={resizePressStart} />
     </Container>

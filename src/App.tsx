@@ -15,7 +15,6 @@ const App = () => {
   }, [dispatch])
 
   const spaceData: CordsPair = useAppSelector((state) => state.space.vpData)
-
   if (spaceData.xCord != -1) {
     return <MainPage />
   }

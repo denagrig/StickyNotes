@@ -5,6 +5,7 @@ type NoteData = {
     height: string
     width: string
     text: string
+    fontSize: number
     color: string
 }
 

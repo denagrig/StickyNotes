@@ -36,7 +36,7 @@ export const TextAreaContainer = styled.div`
   padding: 10px 10px 0px 10px;
 `
 
-export const TextArea = styled.textarea`
+export const TextArea = styled.textarea<{ $fontSize?: number;}>`
   width: 100%;
   height: 80%;
   box-sizing: border-box;
@@ -46,9 +46,8 @@ export const TextArea = styled.textarea`
   border: none;
   background: inherit;
   overflow: auto;
-  @media (max-width: 1024px) {
-    font-size: 25px;
-  }
+  font-size: ${(props) => props.$fontSize + "px" || "24px"};
+
 `
 
 export const DeleteButton = styled.div`
@@ -127,8 +126,10 @@ export const BrushIcon = styled(FontAwesomeIcon)`
 export const DeleteIcon = styled(FontAwesomeIcon)`
   color: black;
   position: relative;
+  left: 1px;
   @media (max-width: 1024px) {
     top: 8px;
+    left: 2px;
     font-size: 2rem;
   }
 `

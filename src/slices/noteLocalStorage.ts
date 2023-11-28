@@ -47,6 +47,7 @@ export const pushNote = async (cords: CordsPair) => {
       height: "300px",
       width: "300px",
       text: "",
+      fontSize: 24,
       color: randomColor,
     }
     console.log("note pushed")

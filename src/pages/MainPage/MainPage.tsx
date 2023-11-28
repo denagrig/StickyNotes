@@ -63,8 +63,8 @@ const MainPage = () => {
           eventStartCords.yCord == processedEvent.pageY
         ) {
           const createCords: CordsPair = {
-            xCord: processedEvent.pageX + spaceData.xCord,
-            yCord: processedEvent.pageY + spaceData.yCord,
+            xCord: processedEvent.pageX / spaceData.zoomFactor + spaceData.xCord,
+            yCord: processedEvent.pageY / spaceData.zoomFactor + spaceData.yCord,
           }
           dispatch(addNote(createCords))
         }
@@ -72,11 +72,9 @@ const MainPage = () => {
     },
     [
       dispatch,
-      eventStartCords.xCord,
-      eventStartCords.yCord,
+      eventStartCords,
       mode,
-      spaceData.xCord,
-      spaceData.yCord,
+      spaceData
     ]
   )
 
