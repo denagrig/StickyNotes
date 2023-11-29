@@ -1982,7 +1982,7 @@ var createAsyncThunk = function () {
       };
     });
     var displayedWarning = false;
-    var AC = typeof AbortController !== "undefined" ? AbortController : /** @class */function () {
+    var AC = typeof AbortController !== "undefined" ? AbortController : ( /** @class */function () {
       function class_1() {
         this.signal = {
           aborted: false,
@@ -2005,7 +2005,7 @@ var createAsyncThunk = function () {
         }
       };
       return class_1;
-    }();
+    }());
     function actionCreator(arg) {
       return function (dispatch, getState, extra) {
         var requestId = (options == null ? void 0 : options.idGenerator) ? options.idGenerator(arg) : nanoid();
@@ -23597,11 +23597,10 @@ const StickyNote = ({ note }) => {
         if (textareaRef.current.clientHeight < textareaRef.current.scrollHeight) {
             if (newNote.fontSize > 16)
                 newNote.fontSize -= 2;
-            else {
-                const width = parseFloat(newNote.width.replace("px", ""));
-                newNote.width = width + 30 + "px";
-            }
-            console.log(newNote.width);
+        }
+        else if (textareaRef.current.clientHeight >= textareaRef.current.scrollHeight) {
+            if (newNote.fontSize < 24)
+                newNote.fontSize += 2;
         }
         newNote.text = event.target.value;
         setNoteChanges(newNote);
