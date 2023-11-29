@@ -1,38 +1,53 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import styled from "styled-components"
 
-export const Container = styled.div<{ $top?: string; $left?: string; $height?: string; $width?: string; $color?: string }>`
+export const Container = styled.div<{
+  $top?: string;
+  $left?: string;
+  $height?: string;
+  $width?: string;
+  $color?: string;
+}>`
   width: ${(props) => props.$width || "300px"};
   height: ${(props) => props.$height || "300px"};
   border: 3px solid #333;
   position: absolute;
-  top: ${(props) => props.$top || "10px"};
-  left: ${(props) => props.$left ||"10px"};
-  background:  ${(props) => props.$color || "lightgreen"};;
-  display: inline-block;
+  top: ${(props) => props.$top || "30px"};
+  left: ${(props) => props.$left || "30px"};
+  background: ${(props) => props.$color || "lightgreen"};
   border-radius: 10px;
 `
 
 export const MovableHeader = styled.div`
   border-bottom: 2px solid #333;
   height: 15px;
-  color: black;
   padding: 0 0 10px 0;
-  width: 100%;
+  flex: 1;
   cursor: grab;
+  @media (max-width: 1024px) {
+    height: 35px;
+  }
 `
 
-export const TextArea = styled.textarea`
+export const TextAreaContainer = styled.div`
   width: 100%;
-  height: 80%; 
+  height: 100%;
   box-sizing: border-box;
-  padding: 5px 10px 5px 10px;
+  padding: 10px 10px 0px 10px;
+`
+
+export const TextArea = styled.textarea<{ $fontSize?: number;}>`
+  width: 100%;
+  height: 80%;
+  box-sizing: border-box;
   line-height: 1.5;
   outline: none;
   resize: none;
   border: none;
   background: inherit;
-  owerflow: auto;
+  overflow: auto;
+  font-size: ${(props) => props.$fontSize + "px" || "24px"};
+
 `
 
 export const DeleteButton = styled.div`
@@ -45,9 +60,12 @@ export const DeleteButton = styled.div`
   text-align: top;
   vertical-align: top;
   align-items: centre;
-  line-height: 15px; 
+  line-height: 15px;
   font-size: 30px;
   cursor: pointer;
+  @media (max-width: 1024px) {
+    height: 35px;
+  }
 `
 
 export const Header = styled.div`
@@ -64,17 +82,24 @@ export const Resize = styled.div`
   right: -5px;
   bottom: -5px;
   cursor: nwse-resize;
+  @media (max-width: 1024px) {
+    height: 20px;
+    width: 20px;
+    right: -12px;
+    bottom: -12px;
+  }
 `
 
 export const ChangeColorContainer = styled.div`
   border-bottom: 2px solid #333;
   border-right: 2px solid #333;
   height: 15px;
-  color: black;
   padding: 0 0 10px 0;
   width: 30px;
-  line-height: 15px; 
-  font-size: 30px;
+  line-height: 15px;
+  @media (max-width: 1024px) {
+    height: 35px;
+  }
 `
 
 export const ChangeColorInput = styled.input`
@@ -85,10 +110,26 @@ export const ChangeColorInput = styled.input`
 `
 
 export const BrushIcon = styled(FontAwesomeIcon)`
-    color: black;
-    font-size: 1.2rem;
-    position: absolute;
-    top: 3px;
-    left: 5px;
-    pointer-events: none;
+  color: black;
+  font-size: 1.2rem;
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  pointer-events: none;
+  @media (max-width: 1024px) {
+    top: 8px;
+    left: 0px;
+    font-size: 1.5rem;
+  }
+`
+
+export const DeleteIcon = styled(FontAwesomeIcon)`
+  color: black;
+  position: relative;
+  left: 1px;
+  @media (max-width: 1024px) {
+    top: 8px;
+    left: 2px;
+    font-size: 2rem;
+  }
 `

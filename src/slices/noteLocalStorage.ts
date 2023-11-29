@@ -1,11 +1,12 @@
-import { NoteData } from "src/types"
+import { colors } from "src/data"
+import { CordsPair, NoteData } from "src/types"
 
-export const saveNote = async (NoteData: NoteData) => {
+export const saveNote = async (noteData: NoteData) => {
   return new Promise<NoteData[]>((resolve) => {
     const notesRecord: NoteData[] = JSON.parse(
       localStorage.getItem("notesRecord") || "[]"
     )
-    const id = NoteData.id
+    const id = noteData.id
     let notePlace = 0
     let curNote = 0
     notesRecord.map((note) => {
@@ -14,10 +15,10 @@ export const saveNote = async (NoteData: NoteData) => {
       }
       curNote++
     })
-    notesRecord[notePlace] = NoteData
+    notesRecord[notePlace] = noteData
+    console.log("saved notes")
     localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
     resolve(notesRecord)
-    return notesRecord
   })
 }
 
@@ -26,35 +27,35 @@ export const loadNotes = async () => {
     const notesRecord: NoteData[] = JSON.parse(
       localStorage.getItem("notesRecord") || "[]"
     )
+    console.log("loaded notes")
     resolve(notesRecord)
-    return notesRecord
   })
 }
 
-export const pushNote = async () => {
+export const pushNote = async (cords: CordsPair) => {
   return new Promise<NoteData[]>((resolve) => {
     const notesRecord: NoteData[] = JSON.parse(
       localStorage.getItem("notesRecord") || "[]"
     )
-    let notesId: number = JSON.parse(
-      localStorage.getItem("notesID") || "0"
-    )
+    const randomColor = colors[Math.floor(Math.random() * colors.length)]
+
+    let notesId: number = JSON.parse(localStorage.getItem("notesID") || "0")
     const newNote: NoteData = {
       id: notesId,
-      xCord: "5px",
-      yCord: "5px",
+      xCord: cords.xCord + "px",
+      yCord: cords.yCord + "px",
       height: "300px",
       width: "300px",
       text: "",
-      color: "lightgreen",
+      fontSize: 24,
+      color: randomColor,
     }
+    console.log("note pushed")
     notesRecord.push(newNote)
     notesId++
-    console.log(notesId)
     localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
     localStorage.setItem("notesID", JSON.stringify(notesId))
     resolve(notesRecord)
-    return notesRecord
   })
 }
 
@@ -73,8 +74,42 @@ export const popNote = async (id: number) => {
     })
     notesRecord.splice(splicePos, 1)
     localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
-    console.log(notesRecord)
     resolve(notesRecord)
-    return notesRecord
+  })
+}
+
+export const clearAllNotes = async () => {
+  return new Promise<NoteData[]>((resolve) => {
+    localStorage.removeItem("notesRecord")
+    console.log("note cleared")
+    resolve([])
+  })
+}
+
+export const moveToTop = async (id: number) => {
+  return new Promise<NoteData[]>((resolve) => {
+    let curPos = 0
+    let notePos = 0
+    const notesRecord: NoteData[] = JSON.parse(
+      localStorage.getItem("notesRecord") || "[]"
+    )
+    let noteData: NoteData = notesRecord[0]
+    notesRecord.map((note) => {
+      if (note.id == id) {
+        noteData = notesRecord[curPos]
+        notePos = curPos
+      }
+      curPos++
+    })
+    curPos = 0
+    notesRecord.map((note) => {
+      if (curPos > notePos) {
+        notesRecord[curPos - 1] = note
+      }
+      curPos++
+    })
+    notesRecord[notesRecord.length - 1] = noteData
+    localStorage.setItem("notesRecord", JSON.stringify(notesRecord))
+    resolve(notesRecord)
   })
 }

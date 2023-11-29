@@ -1,28 +1,30 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { NoteData } from "src/types"
+import { CordsPair, NoteData } from "src/types"
 import {
+  clearAllNotes,
   loadNotes,
+  moveToTop,
   popNote,
   pushNote,
   saveNote,
 } from "src/slices/noteLocalStorage"
 
 export const setNoteData = createAsyncThunk<NoteData[], NoteData>(
-  "NoteSlices/setNoteData",
-  async (NoteData: NoteData, thunkAPI) => {
+  "noteSlice/setNoteData",
+  async (noteData: NoteData, thunkAPI) => {
     try {
-      return await saveNote(NoteData)
+      return await saveNote(noteData)
     } catch (e) {
       return thunkAPI.rejectWithValue(e)
     }
   }
 )
 
-export const addNote = createAsyncThunk<NoteData[], void>(
-  "NoteSlices/addNote",
-  async (params: void, thunkAPI) => {
+export const addNote = createAsyncThunk<NoteData[], CordsPair>(
+  "noteSlice/addNote",
+  async (cords: CordsPair, thunkAPI) => {
     try {
-      return await pushNote()
+      return await pushNote(cords)
     } catch (e) {
       return thunkAPI.rejectWithValue(e)
     }
@@ -30,7 +32,7 @@ export const addNote = createAsyncThunk<NoteData[], void>(
 )
 
 export const loadNoteData = createAsyncThunk<NoteData[], void>(
-  "NoteSlices/loadNoteData",
+  "noteSlice/loadNoteData",
   async (params: void, thunkAPI) => {
     try {
       return await loadNotes()
@@ -41,10 +43,32 @@ export const loadNoteData = createAsyncThunk<NoteData[], void>(
 )
 
 export const deleteNote = createAsyncThunk<NoteData[], number>(
-  "NoteSlices/deleteNote",
+  "noteSlice/deleteNote",
   async (id: number, thunkAPI) => {
     try {
       return await popNote(id)
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e)
+    }
+  }
+)
+
+export const clearNotes = createAsyncThunk<NoteData[], void>(
+  "noteSlice/clearNotes",
+  async (params: void, thunkAPI) => {
+    try {
+      return await clearAllNotes()
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e)
+    }
+  }
+)
+
+export const maxZIndex = createAsyncThunk<NoteData[], number>(
+  "noteSlice/maxZIndex",
+  async (noteId: number, thunkAPI) => {
+    try {
+      return await moveToTop(noteId)
     } catch (e) {
       return thunkAPI.rejectWithValue(e)
     }
@@ -60,7 +84,7 @@ const initialState: NotesState = {
 }
 
 const noteSlice = createSlice({
-  name: "noteSlices",
+  name: "noteSlice",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -74,6 +98,12 @@ const noteSlice = createSlice({
       state.Notes = action.payload
     }),
     builder.addCase(deleteNote.fulfilled, (state, action) => {
+      state.Notes = action.payload
+    })
+    builder.addCase(clearNotes.fulfilled, (state, action) => {
+      state.Notes = action.payload
+    })
+    builder.addCase(maxZIndex.fulfilled, (state, action) => {
       state.Notes = action.payload
     })
   },

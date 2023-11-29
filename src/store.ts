@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit"
-import noteReducer from "./slices/noteSlice"
+import noteReducer from "src/slices/noteSlice"
+import spaceReducer from "src/slices/spaceSlice"
 
 export const store = configureStore({
   reducer: {
     note: noteReducer,
+    space: spaceReducer,
   },
 })
 

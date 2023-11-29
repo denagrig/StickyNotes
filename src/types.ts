@@ -5,7 +5,24 @@ type NoteData = {
     height: string
     width: string
     text: string
+    fontSize: number
     color: string
 }
 
-export type {NoteData}
+type VpData = {
+    xCord: number
+    yCord: number
+    zoomFactor: number
+}
+
+type SpaceData = {
+    vpData: VpData,
+    mode: number
+}
+
+type CordsPair = {
+    xCord: number
+    yCord: number
+}
+
+export type {NoteData, VpData, CordsPair, SpaceData}
