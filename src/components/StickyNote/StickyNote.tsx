@@ -139,11 +139,10 @@ const StickyNote = ({ note }: { note: NoteData }) => {
         if(newNote.fontSize > 16)
           newNote.fontSize -= 2
         
-        else {
-          const width = parseFloat( newNote.width.replace("px", ""))
-          newNote.width = width + 30 + "px"
-        }
-        console.log( newNote.width)
+      }
+      else if (textareaRef.current!.clientHeight >= textareaRef.current!.scrollHeight) {
+        if(newNote.fontSize < 24)
+          newNote.fontSize += 2
       }
       newNote.text = event.target.value
       setNoteChanges(newNote)
