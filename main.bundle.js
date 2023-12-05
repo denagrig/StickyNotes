@@ -23188,7 +23188,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/slices/noteSlice */ "./src/slices/noteSlice.ts");
 /* harmony import */ var src_pages_MainPage_MainPage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/pages/MainPage/MainPage */ "./src/pages/MainPage/MainPage.tsx");
 /* harmony import */ var src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/slices/spaceSlice */ "./src/slices/spaceSlice.ts");
-/* harmony import */ var _hooks__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./hooks */ "./src/hooks.ts");
+/* harmony import */ var src_hooks__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/hooks */ "./src/hooks.ts");
 
 
 
@@ -23202,7 +23202,7 @@ const App = () => {
         dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__.loadNoteData)());
         dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_5__.loadSpaceData)());
     }, [dispatch]);
-    const spaceData = (0,_hooks__WEBPACK_IMPORTED_MODULE_6__.useAppSelector)((state) => state.space.vpData);
+    const spaceData = (0,src_hooks__WEBPACK_IMPORTED_MODULE_6__.useAppSelector)((state) => state.space.vpData);
     if (spaceData.xCord != -1) {
         return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage__WEBPACK_IMPORTED_MODULE_4__["default"], {});
     }
@@ -23212,10 +23212,10 @@ const App = () => {
 
 /***/ }),
 
-/***/ "./src/components/PageHeader/PageHeader.styled.ts":
-/*!********************************************************!*\
-  !*** ./src/components/PageHeader/PageHeader.styled.ts ***!
-  \********************************************************/
+/***/ "./src/components/PageHeader/PageHeader.styled.tsx":
+/*!*********************************************************!*\
+  !*** ./src/components/PageHeader/PageHeader.styled.tsx ***!
+  \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -23252,6 +23252,14 @@ const LeftButtons = styled_components__WEBPACK_IMPORTED_MODULE_0__["default"].bu
     margin-right: 72px;
     text-align: center;
   }
+  transition:
+    background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  &:hover {
+    background: #7fa2ae;
+  }
 `;
 const ClearButton = styled_components__WEBPACK_IMPORTED_MODULE_0__["default"].button `
   float: right;
@@ -23274,6 +23282,14 @@ const ClearButton = styled_components__WEBPACK_IMPORTED_MODULE_0__["default"].bu
     width: 220px;
     text-align: center;
   }
+  transition:
+    background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  &:hover {
+    background: #7fa2ae;
+  }
 `;
 
 
@@ -23292,7 +23308,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var src_components_PageHeader_PageHeader_styled__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/components/PageHeader/PageHeader.styled */ "./src/components/PageHeader/PageHeader.styled.ts");
+/* harmony import */ var src_components_PageHeader_PageHeader_styled__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/components/PageHeader/PageHeader.styled */ "./src/components/PageHeader/PageHeader.styled.tsx");
 /* harmony import */ var src_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/data */ "./src/data.ts");
 /* harmony import */ var src_hooks__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/hooks */ "./src/hooks.ts");
 /* harmony import */ var src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/slices/noteSlice */ "./src/slices/noteSlice.ts");
@@ -23323,10 +23339,10 @@ const PageHeader = () => {
 
 /***/ }),
 
-/***/ "./src/components/StickyNote/StickyNote.styled.ts":
-/*!********************************************************!*\
-  !*** ./src/components/StickyNote/StickyNote.styled.ts ***!
-  \********************************************************/
+/***/ "./src/components/StickyNote/StickyNote.styled.tsx":
+/*!*********************************************************!*\
+  !*** ./src/components/StickyNote/StickyNote.styled.tsx ***!
+  \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -23372,11 +23388,11 @@ const TextAreaContainer = styled_components__WEBPACK_IMPORTED_MODULE_1__["defaul
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  padding: 10px 10px 0px 10px;
+  padding: 10px 10px 10px 10px;
 `;
 const TextArea = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].textarea `
   width: 100%;
-  height: 80%;
+  height: calc(100% - 35px);
   box-sizing: border-box;
   line-height: 1.5;
   outline: none;
@@ -23385,7 +23401,13 @@ const TextArea = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].texta
   background: inherit;
   overflow: auto;
   font-size: ${(props) => props.$fontSize + "px" || 0};
-
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #c2c2c2;
+  }
 `;
 const DeleteButton = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
   border-bottom: 2px solid #333;
@@ -23482,7 +23504,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/components/StickyNote/StickyNote.styled */ "./src/components/StickyNote/StickyNote.styled.ts");
+/* harmony import */ var src_components_StickyNote_StickyNote_styled__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/components/StickyNote/StickyNote.styled */ "./src/components/StickyNote/StickyNote.styled.tsx");
 /* harmony import */ var src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/slices/noteSlice */ "./src/slices/noteSlice.ts");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var src_data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/data */ "./src/data.ts");
@@ -23595,12 +23617,8 @@ const StickyNote = ({ note }) => {
     const handleTextChange = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         const newNote = Object.assign({}, noteChanges);
         if (textareaRef.current.clientHeight < textareaRef.current.scrollHeight) {
-            if (newNote.fontSize > 16)
+            if (newNote.fontSize > src_data__WEBPACK_IMPORTED_MODULE_5__.minFontSize)
                 newNote.fontSize -= 2;
-        }
-        else if (textareaRef.current.clientHeight >= textareaRef.current.scrollHeight) {
-            if (newNote.fontSize < 24)
-                newNote.fontSize += 2;
         }
         newNote.text = event.target.value;
         setNoteChanges(newNote);
@@ -23689,6 +23707,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Mode: () => (/* binding */ Mode),
 /* harmony export */   SpaceStatus: () => (/* binding */ SpaceStatus),
 /* harmony export */   colors: () => (/* binding */ colors),
+/* harmony export */   maxFontSize: () => (/* binding */ maxFontSize),
+/* harmony export */   minFontSize: () => (/* binding */ minFontSize),
 /* harmony export */   noteMinSize: () => (/* binding */ noteMinSize)
 /* harmony export */ });
 var SpaceStatus;
@@ -23707,6 +23727,8 @@ const noteMinSize = {
     height: 200,
     width: 150,
 };
+const minFontSize = 16;
+const maxFontSize = 24;
 const colors = [
     "lightgreen",
     "lightblue",
@@ -23767,6 +23789,7 @@ __webpack_require__.r(__webpack_exports__);
 const BackgroundImg = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
   background-image: url(${src_assets_background_jpg__WEBPACK_IMPORTED_MODULE_0__});
   background-repeat: repeat;
+  background-size: 2500px;
   position: absolute;
   cursor: ${(props) => {
     const mode = props.$mode;
