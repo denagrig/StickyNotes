@@ -14,6 +14,9 @@ export const noteMinSize = {
   width: 150,
 }
 
+export const minFontSize = 16
+export const maxFontSize = 24
+
 export const colors = [
   "lightgreen",
   "lightblue",

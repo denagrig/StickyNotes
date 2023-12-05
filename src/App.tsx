@@ -4,8 +4,8 @@ import { AppDispatch } from "src/store"
 import { loadNoteData } from "src/slices/noteSlice"
 import MainPage from "src/pages/MainPage/MainPage"
 import { loadSpaceData } from "src/slices/spaceSlice"
-import { useAppSelector } from "./hooks"
-import { CordsPair } from "./types"
+import { useAppSelector } from "src/hooks"
+import { CordsPair } from "src/types"
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>()

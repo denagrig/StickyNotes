@@ -16,7 +16,7 @@ import { deleteNote, maxZIndex, setNoteData } from "src/slices/noteSlice"
 import { AppDispatch } from "src/store"
 import { useDispatch } from "react-redux"
 import { CordsPair, NoteData, VpData } from "src/types"
-import { noteMinSize } from "src/data"
+import { minFontSize, noteMinSize } from "src/data"
 import { faMinus, faPaintBrush } from "@fortawesome/free-solid-svg-icons"
 import "@melloware/coloris/dist/coloris.css"
 import Coloris from "@melloware/coloris"
@@ -136,13 +136,8 @@ const StickyNote = ({ note }: { note: NoteData }) => {
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newNote = Object.assign({}, noteChanges)
       if (textareaRef.current!.clientHeight < textareaRef.current!.scrollHeight) {
-        if(newNote.fontSize > 16)
+        if(newNote.fontSize > minFontSize)
           newNote.fontSize -= 2
-        
-      }
-      else if (textareaRef.current!.clientHeight >= textareaRef.current!.scrollHeight) {
-        if(newNote.fontSize < 24)
-          newNote.fontSize += 2
       }
       newNote.text = event.target.value
       setNoteChanges(newNote)

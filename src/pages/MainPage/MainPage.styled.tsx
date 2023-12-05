@@ -7,6 +7,7 @@ export const BackgroundImg = styled.div<{
 }>`
   background-image: url(${background});
   background-repeat: repeat;
+  background-size: 2500px;
   position: absolute;
   cursor: ${(props) => {
     const mode = props.$mode

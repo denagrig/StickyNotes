@@ -26,6 +26,14 @@ export const LeftButtons = styled.button`
     margin-right: 72px;
     text-align: center;
   }
+  transition:
+    background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  &:hover {
+    background: #7fa2ae;
+  }
 `
 export const ClearButton = styled.button`
   float: right;
@@ -47,5 +55,13 @@ export const ClearButton = styled.button`
     font-size: 20px;
     width: 220px;
     text-align: center;
+  }
+  transition:
+    background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  &:hover {
+    background: #7fa2ae;
   }
 `
