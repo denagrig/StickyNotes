@@ -4,10 +4,12 @@ import { Mode } from "src/data"
 
 export const BackgroundImg = styled.div<{
   $mode?: Mode;
+  $backgroundScale: number;
 }>`
   background-image: url(${background});
   background-repeat: repeat;
-  background-size: 2500px;
+  background-size: ${(props) =>
+    1/props.$backgroundScale * 2000 + "px" || "1000px"};
   position: absolute;
   cursor: ${(props) => {
     const mode = props.$mode
