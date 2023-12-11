@@ -1,15 +1,10 @@
 import styled from "styled-components"
-import background from "src/assets/background.jpg"
 import { Mode } from "src/data"
 
 export const BackgroundImg = styled.div<{
   $mode?: Mode;
-  $backgroundScale: number;
 }>`
-  background-image: url(${background});
-  background-repeat: repeat;
-  background-size: ${(props) =>
-    1/props.$backgroundScale * 2000 + "px" || "1000px"};
+  background-color: lightgray;
   position: absolute;
   cursor: ${(props) => {
     const mode = props.$mode

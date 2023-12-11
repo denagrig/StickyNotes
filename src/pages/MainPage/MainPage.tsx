@@ -81,13 +81,13 @@ const MainPage = () => {
       yCord: spaceRef.current?.viewPort?.top || 0,
       zoomFactor: spaceRef.current?.viewPort?.zoomFactor || 1,
     }
-    /* window.location.search =
-      "?" +
-      newSpaceData.xCord +
-      "?" +
-      newSpaceData.yCord +
-      "?" +
-      newSpaceData.zoomFactor*/
+    window.location.search =
+    "?" +
+    newSpaceData.xCord +
+    "?" +
+    newSpaceData.yCord +
+    "?" +
+    newSpaceData.zoomFactor
     console.log(newSpaceData.zoomFactor)
     dispatch(setSpaceData(newSpaceData))
   }, [dispatch])
@@ -135,7 +135,7 @@ const MainPage = () => {
           }}
           ref={spaceRef}
         >
-          <BackgroundImg $mode={mode} $backgroundScale={spaceData.zoomFactor}>
+          <BackgroundImg $mode={mode} >
             <NoPanContainer ref={noPanRef}>
               <NoPanArea>
                 {notesData.map((note: NoteData) => (

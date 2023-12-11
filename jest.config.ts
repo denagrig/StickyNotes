@@ -5,25 +5,25 @@ const config: Config = {
   transform: {
     "\\.tsx?$": "ts-jest",
     "\\.ts?$": "ts-jest",
-    "\\.jsx?$": "babel-jest",
   },
   moduleNameMapper: {
-    "^src": "<rootDir>/src",
-    "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    "src/(.*)": "<rootDir>/src/$1",
+    ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "identity-obj-proxy"
   },
   globals: {
     "IS_REACT_ACT_ENVIRONMENT": true
   },
   collectCoverageFrom: [
     "src/**/*.{js,jsx}",
-    "!src/index.tsx"
   ],
+  testPathIgnorePatterns: ["./node_modules/"],
   testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
   moduleFileExtensions: ["ts", "tsx", "js", "json", "node"],
   collectCoverage: true,
   clearMocks: true,
   coverageDirectory: "coverage",
-  testEnvironment: "jest-environment-jsdom"
+  testEnvironment: "jsdom",
+
 }
 
 export default config
