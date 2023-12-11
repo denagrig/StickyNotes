@@ -23201,6 +23201,19 @@ const App = () => {
     (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
         dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_3__.loadNoteData)());
         dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_5__.loadSpaceData)());
+        const url = window.location.search;
+        const params = url.split("?");
+        if (params.length == 1) {
+            window.location.search = "?0?0?0";
+            for (let i = 0; i < 3; i++)
+                params.push("0");
+        }
+        const newSpaceData = {
+            xCord: JSON.parse(params[1]) || 0,
+            yCord: JSON.parse(params[2]) || 0,
+            zoomFactor: JSON.parse(params[3]) || 0,
+        };
+        dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_5__.setSpaceData)(newSpaceData));
     }, [dispatch]);
     const spaceData = (0,src_hooks__WEBPACK_IMPORTED_MODULE_6__.useAppSelector)((state) => state.space.vpData);
     if (spaceData.xCord != -1) {
@@ -23617,8 +23630,20 @@ const StickyNote = ({ note }) => {
     const handleTextChange = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event) => {
         const newNote = Object.assign({}, noteChanges);
         if (textareaRef.current.clientHeight < textareaRef.current.scrollHeight) {
-            if (newNote.fontSize > src_data__WEBPACK_IMPORTED_MODULE_5__.minFontSize)
+            if (newNote.fontSize > src_data__WEBPACK_IMPORTED_MODULE_5__.minFontSize) {
                 newNote.fontSize -= 2;
+                textareaRef.current.style.fontSize = newNote.fontSize + "px";
+            }
+        }
+        else if (textareaRef.current.clientHeight == textareaRef.current.scrollHeight) {
+            if (newNote.fontSize < src_data__WEBPACK_IMPORTED_MODULE_5__.maxFontSize) {
+                newNote.fontSize += 2;
+                textareaRef.current.style.fontSize = newNote.fontSize + "px";
+            }
+            if (textareaRef.current.clientHeight < textareaRef.current.scrollHeight) {
+                newNote.fontSize -= 2;
+                textareaRef.current.style.fontSize = newNote.fontSize + "px";
+            }
         }
         newNote.text = event.target.value;
         setNoteChanges(newNote);
@@ -23709,7 +23734,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   colors: () => (/* binding */ colors),
 /* harmony export */   maxFontSize: () => (/* binding */ maxFontSize),
 /* harmony export */   minFontSize: () => (/* binding */ minFontSize),
-/* harmony export */   noteMinSize: () => (/* binding */ noteMinSize)
+/* harmony export */   noteMinSize: () => (/* binding */ noteMinSize),
+/* harmony export */   testNotes: () => (/* binding */ testNotes),
+/* harmony export */   testVpData: () => (/* binding */ testVpData)
 /* harmony export */ });
 var SpaceStatus;
 (function (SpaceStatus) {
@@ -23742,6 +23769,23 @@ const colors = [
     "mintcream",
     "darkcyan",
 ];
+const testNotes = [
+    {
+        id: 1,
+        xCord: "0px",
+        yCord: "0px",
+        height: "300px",
+        width: "300px",
+        text: "",
+        fontSize: 24,
+        color: "green",
+    },
+];
+const testVpData = {
+    xCord: 1,
+    yCord: 1,
+    zoomFactor: 1,
+};
 
 
 /***/ }),
@@ -23755,12 +23799,10 @@ const colors = [
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   useAppDispatch: () => (/* binding */ useAppDispatch),
 /* harmony export */   useAppSelector: () => (/* binding */ useAppSelector)
 /* harmony export */ });
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
-const useAppDispatch = () => (0,react_redux__WEBPACK_IMPORTED_MODULE_0__.useDispatch)();
 const useAppSelector = react_redux__WEBPACK_IMPORTED_MODULE_0__.useSelector;
 
 
@@ -23780,23 +23822,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   NoPanContainer: () => (/* binding */ NoPanContainer),
 /* harmony export */   SpaceContainer: () => (/* binding */ SpaceContainer)
 /* harmony export */ });
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js");
-/* harmony import */ var src_assets_background_jpg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! src/assets/background.jpg */ "./src/assets/background.jpg");
-/* harmony import */ var src_data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/data */ "./src/data.ts");
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js");
+/* harmony import */ var src_data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! src/data */ "./src/data.ts");
 
 
-
-const BackgroundImg = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div `
-  background-image: url(${src_assets_background_jpg__WEBPACK_IMPORTED_MODULE_0__});
-  background-repeat: repeat;
-  background-size: 2500px;
+const BackgroundImg = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div `
+  background-color: lightgray;
   position: absolute;
   cursor: ${(props) => {
     const mode = props.$mode;
-    if (mode == src_data__WEBPACK_IMPORTED_MODULE_1__.Mode.Move) {
+    if (mode == src_data__WEBPACK_IMPORTED_MODULE_0__.Mode.Move) {
         return "grab";
     }
-    else if (mode == src_data__WEBPACK_IMPORTED_MODULE_1__.Mode.Add) {
+    else if (mode == src_data__WEBPACK_IMPORTED_MODULE_0__.Mode.Add) {
         return "copy";
     }
     else {
@@ -23806,9 +23844,9 @@ const BackgroundImg = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].
   width: 10000px;
   height: 10000px;
 `;
-const MainPageContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div ``;
-const SpaceContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div ``;
-const NoPanContainer = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].div ``;
+const MainPageContainer = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div ``;
+const SpaceContainer = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div ``;
+const NoPanContainer = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div ``;
 
 
 /***/ }),
@@ -23826,18 +23864,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 /* harmony import */ var src_components_StickyNote_StickyNote__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/components/StickyNote/StickyNote */ "./src/components/StickyNote/StickyNote.tsx");
-/* harmony import */ var src_hooks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/hooks */ "./src/hooks.ts");
-/* harmony import */ var _melloware_coloris_dist_coloris_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @melloware/coloris/dist/coloris.css */ "./node_modules/@melloware/coloris/dist/coloris.css");
-/* harmony import */ var react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-zoomable-ui */ "./node_modules/react-zoomable-ui/dist/index.js");
-/* harmony import */ var react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var src_components_PageHeader_PageHeader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/components/PageHeader/PageHeader */ "./src/components/PageHeader/PageHeader.tsx");
-/* harmony import */ var src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/pages/MainPage/MainPage.styled */ "./src/pages/MainPage/MainPage.styled.tsx");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/slices/spaceSlice */ "./src/slices/spaceSlice.ts");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var src_data__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! src/data */ "./src/data.ts");
-/* harmony import */ var src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! src/slices/noteSlice */ "./src/slices/noteSlice.ts");
+/* harmony import */ var _melloware_coloris_dist_coloris_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @melloware/coloris/dist/coloris.css */ "./node_modules/@melloware/coloris/dist/coloris.css");
+/* harmony import */ var react_zoomable_ui__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-zoomable-ui */ "./node_modules/react-zoomable-ui/dist/index.js");
+/* harmony import */ var react_zoomable_ui__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var src_components_PageHeader_PageHeader__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/components/PageHeader/PageHeader */ "./src/components/PageHeader/PageHeader.tsx");
+/* harmony import */ var src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/pages/MainPage/MainPage.styled */ "./src/pages/MainPage/MainPage.styled.tsx");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/slices/spaceSlice */ "./src/slices/spaceSlice.ts");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var src_data__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! src/data */ "./src/data.ts");
+/* harmony import */ var src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! src/slices/noteSlice */ "./src/slices/noteSlice.ts");
+/* harmony import */ var src_hooks__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! src/hooks */ "./src/hooks.ts");
 
 
 
@@ -23851,18 +23889,18 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const MainPage = () => {
-    const notesData = (0,src_hooks__WEBPACK_IMPORTED_MODULE_2__.useAppSelector)((state) => state.note.Notes);
-    const spaceData = (0,src_hooks__WEBPACK_IMPORTED_MODULE_2__.useAppSelector)((state) => state.space.vpData);
-    const mode = (0,src_hooks__WEBPACK_IMPORTED_MODULE_2__.useAppSelector)((state) => state.space.mode);
-    const dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_7__.useDispatch)();
-    const spaceRef = react__WEBPACK_IMPORTED_MODULE_9___default().useRef(null);
-    const noPanRef = react__WEBPACK_IMPORTED_MODULE_9___default().useRef(null);
-    const spaceContainerRef = react__WEBPACK_IMPORTED_MODULE_9___default().useRef(null);
-    const [eventStartCords, setEventStartCords] = (0,react__WEBPACK_IMPORTED_MODULE_9__.useState)({
+    const notesData = (0,src_hooks__WEBPACK_IMPORTED_MODULE_11__.useAppSelector)((state) => state.note.Notes);
+    const spaceData = (0,src_hooks__WEBPACK_IMPORTED_MODULE_11__.useAppSelector)((state) => state.space.vpData);
+    const mode = (0,src_hooks__WEBPACK_IMPORTED_MODULE_11__.useAppSelector)((state) => state.space.mode);
+    const dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_6__.useDispatch)();
+    const spaceRef = react__WEBPACK_IMPORTED_MODULE_8___default().useRef(null);
+    const noPanRef = react__WEBPACK_IMPORTED_MODULE_8___default().useRef(null);
+    const spaceContainerRef = react__WEBPACK_IMPORTED_MODULE_8___default().useRef(null);
+    const [eventStartCords, setEventStartCords] = (0,react__WEBPACK_IMPORTED_MODULE_8__.useState)({
         xCord: 0,
         yCord: 0,
     });
-    const handlePressStart = (0,react__WEBPACK_IMPORTED_MODULE_9__.useCallback)((event) => {
+    const handlePressStart = (0,react__WEBPACK_IMPORTED_MODULE_8__.useCallback)((event) => {
         let processedEvent;
         if ("touches" in event) {
             processedEvent = event.touches[0];
@@ -23876,8 +23914,8 @@ const MainPage = () => {
         };
         setEventStartCords(currentCords);
     }, []);
-    const handlePressEnd = (0,react__WEBPACK_IMPORTED_MODULE_9__.useCallback)((event) => {
-        if (mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Add) {
+    const handlePressEnd = (0,react__WEBPACK_IMPORTED_MODULE_8__.useCallback)((event) => {
+        if (mode == src_data__WEBPACK_IMPORTED_MODULE_9__.Mode.Add) {
             let processedEvent;
             if ("touches" in event) {
                 processedEvent = event.changedTouches[0];
@@ -23892,27 +23930,30 @@ const MainPage = () => {
                     xCord: processedEvent.pageX / spaceData.zoomFactor + spaceData.xCord,
                     yCord: processedEvent.pageY / spaceData.zoomFactor + spaceData.yCord,
                 };
-                dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_11__.addNote)(createCords));
+                dispatch((0,src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_10__.addNote)(createCords));
             }
         }
-    }, [
-        dispatch,
-        eventStartCords,
-        mode,
-        spaceData
-    ]);
-    const updateSpaceData = (0,react__WEBPACK_IMPORTED_MODULE_9__.useCallback)(() => {
+    }, [dispatch, eventStartCords, mode, spaceData]);
+    const updateSpaceData = (0,react__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
         const newSpaceData = {
             xCord: spaceRef.current?.viewPort?.left || 0,
             yCord: spaceRef.current?.viewPort?.top || 0,
             zoomFactor: spaceRef.current?.viewPort?.zoomFactor || 1,
         };
-        dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_8__.setSpaceData)(newSpaceData));
+        window.location.search =
+            "?" +
+                newSpaceData.xCord +
+                "?" +
+                newSpaceData.yCord +
+                "?" +
+                newSpaceData.zoomFactor;
+        console.log(newSpaceData.zoomFactor);
+        dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_7__.setSpaceData)(newSpaceData));
     }, [dispatch]);
-    (0,react__WEBPACK_IMPORTED_MODULE_9__.useEffect)(() => {
+    (0,react__WEBPACK_IMPORTED_MODULE_8__.useEffect)(() => {
         const currentSpace = spaceContainerRef.current;
         document.addEventListener("wheel", updateSpaceData);
-        if (mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Add) {
+        if (mode == src_data__WEBPACK_IMPORTED_MODULE_9__.Mode.Add) {
             currentSpace?.addEventListener("mousedown", handlePressStart);
             currentSpace?.addEventListener("touchstart", handlePressStart);
             currentSpace?.addEventListener("mouseup", handlePressEnd);
@@ -23927,16 +23968,16 @@ const MainPage = () => {
         };
     }, [handlePressEnd, handlePressStart, mode, spaceData, updateSpaceData]);
     const changeCursor = () => {
-        if (mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Move)
-            dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_8__.setMode)(src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Grabbing));
-        else if (mode == src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Grabbing)
-            dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_8__.setMode)(src_data__WEBPACK_IMPORTED_MODULE_10__.Mode.Move));
+        if (mode == src_data__WEBPACK_IMPORTED_MODULE_9__.Mode.Move)
+            dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_7__.setMode)(src_data__WEBPACK_IMPORTED_MODULE_9__.Mode.Grabbing));
+        else if (mode == src_data__WEBPACK_IMPORTED_MODULE_9__.Mode.Grabbing)
+            dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_7__.setMode)(src_data__WEBPACK_IMPORTED_MODULE_9__.Mode.Move));
     };
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.MainPageContainer, { onMouseUp: () => updateSpaceData(), onTouchEnd: () => updateSpaceData(), children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.SpaceContainer, { ref: spaceContainerRef, onMouseDown: changeCursor, onTouchStart: changeCursor, onMouseUp: changeCursor, onTouchEnd: changeCursor, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.Space, { onCreate: (vp) => {
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_5__.MainPageContainer, { onMouseUp: () => updateSpaceData(), onTouchEnd: () => updateSpaceData(), children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_5__.SpaceContainer, { ref: spaceContainerRef, onMouseDown: changeCursor, onTouchStart: changeCursor, onMouseUp: changeCursor, onTouchEnd: changeCursor, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_3__.Space, { onCreate: (vp) => {
                         vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] });
                         vp.camera.moveBy(0, 0, spaceData.zoomFactor - 1);
                         vp.camera.moveBy(spaceData.xCord, spaceData.yCord);
-                    }, ref: spaceRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.BackgroundImg, { "$mode": mode, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_6__.NoPanContainer, { ref: noPanRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_4__.NoPanArea, { children: notesData.map((note) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote__WEBPACK_IMPORTED_MODULE_1__["default"], { note: note }, note.id))) }) }) }) }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader__WEBPACK_IMPORTED_MODULE_5__["default"], {})] }));
+                    }, ref: spaceRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_5__.BackgroundImg, { "$mode": mode, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_5__.NoPanContainer, { ref: noPanRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_3__.NoPanArea, { children: notesData.map((note) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote__WEBPACK_IMPORTED_MODULE_1__["default"], { note: note }, note.id))) }) }) }) }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader__WEBPACK_IMPORTED_MODULE_4__["default"], {})] }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainPage);
 
@@ -24289,6 +24330,7 @@ const spaceSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_2__.createSlice)
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   setupStore: () => (/* binding */ setupStore),
 /* harmony export */   store: () => (/* binding */ store)
 /* harmony export */ });
 /* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
@@ -24303,18 +24345,16 @@ const store = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_2__.configureStore)({
         space: src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_1__["default"],
     },
 });
+const setupStore = (preloadedState) => {
+    return (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_2__.configureStore)({
+        reducer: {
+            note: src_slices_noteSlice__WEBPACK_IMPORTED_MODULE_0__["default"],
+            space: src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_1__["default"],
+        },
+        preloadedState
+    });
+};
 
-
-/***/ }),
-
-/***/ "./src/assets/background.jpg":
-/*!***********************************!*\
-  !*** ./src/assets/background.jpg ***!
-  \***********************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "25fdcdb74cfbbba25fc6.jpg";
 
 /***/ }),
 
@@ -42050,29 +42090,6 @@ function __disposeResources(env) {
 /******/ 		};
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/publicPath */
-/******/ 	(() => {
-/******/ 		var scriptUrl;
-/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-/******/ 		var document = __webpack_require__.g.document;
-/******/ 		if (!scriptUrl && document) {
-/******/ 			if (document.currentScript)
-/******/ 				scriptUrl = document.currentScript.src;
-/******/ 			if (!scriptUrl) {
-/******/ 				var scripts = document.getElementsByTagName("script");
-/******/ 				if(scripts.length) {
-/******/ 					var i = scripts.length - 1;
-/******/ 					while (i > -1 && !scriptUrl) scriptUrl = scripts[i--].src;
-/******/ 				}
-/******/ 			}
-/******/ 		}
-/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
-/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
-/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
-/******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
-/******/ 		__webpack_require__.p = scriptUrl;
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/nonce */
 /******/ 	(() => {
 /******/ 		__webpack_require__.nc = undefined;
@@ -42100,7 +42117,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-react_dom_client__WEBPACK_IMPORTED_MODULE_2__.createRoot(document.getElementById("root")).render((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_redux__WEBPACK_IMPORTED_MODULE_5__.Provider, { store: src_store__WEBPACK_IMPORTED_MODULE_4__.store, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)((react__WEBPACK_IMPORTED_MODULE_1___default().StrictMode), { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_App__WEBPACK_IMPORTED_MODULE_3__["default"], {}) }) }));
+react_dom_client__WEBPACK_IMPORTED_MODULE_2__.createRoot(document.getElementById("root") || document.createElement("div")).render((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_redux__WEBPACK_IMPORTED_MODULE_5__.Provider, { store: src_store__WEBPACK_IMPORTED_MODULE_4__.store, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)((react__WEBPACK_IMPORTED_MODULE_1___default().StrictMode), { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_App__WEBPACK_IMPORTED_MODULE_3__["default"], {}) }) }));
 
 })();
 
