@@ -1,5 +1,4 @@
 import StickyNote from "src/components/StickyNote/StickyNote"
-import { useAppSelector } from "src/hooks"
 import { CordsPair, NoteData, VpData } from "src/types"
 import "@melloware/coloris/dist/coloris.css"
 import { NoPanArea, Space } from "react-zoomable-ui"
@@ -16,6 +15,7 @@ import { setMode, setSpaceData } from "src/slices/spaceSlice"
 import React, { useCallback, useEffect, useState } from "react"
 import { Mode } from "src/data"
 import { addNote } from "src/slices/noteSlice"
+import { useAppSelector } from "src/hooks"
 
 const MainPage = () => {
   const notesData: NoteData[] = useAppSelector((state) => state.note.Notes)
@@ -63,19 +63,16 @@ const MainPage = () => {
           eventStartCords.yCord == processedEvent.pageY
         ) {
           const createCords: CordsPair = {
-            xCord: processedEvent.pageX / spaceData.zoomFactor + spaceData.xCord,
-            yCord: processedEvent.pageY / spaceData.zoomFactor + spaceData.yCord,
+            xCord:
+              processedEvent.pageX / spaceData.zoomFactor + spaceData.xCord,
+            yCord:
+              processedEvent.pageY / spaceData.zoomFactor + spaceData.yCord,
           }
           dispatch(addNote(createCords))
         }
       }
     },
-    [
-      dispatch,
-      eventStartCords,
-      mode,
-      spaceData
-    ]
+    [dispatch, eventStartCords, mode, spaceData]
   )
 
   const updateSpaceData = useCallback(() => {
@@ -84,7 +81,13 @@ const MainPage = () => {
       yCord: spaceRef.current?.viewPort?.top || 0,
       zoomFactor: spaceRef.current?.viewPort?.zoomFactor || 1,
     }
-
+    history.pushState({}, "", 
+      "?" +
+      newSpaceData.xCord +
+      "?" +
+      newSpaceData.yCord +
+      "?" +
+      newSpaceData.zoomFactor)
     dispatch(setSpaceData(newSpaceData))
   }, [dispatch])
 
@@ -127,11 +130,12 @@ const MainPage = () => {
           onCreate={(vp) => {
             vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] })
             vp.camera.moveBy(0, 0, spaceData.zoomFactor - 1)
+            vp.camera.updateTopLeft(0, 0)
             vp.camera.moveBy(spaceData.xCord, spaceData.yCord)
           }}
           ref={spaceRef}
         >
-          <BackgroundImg $mode={mode}>
+          <BackgroundImg $mode={mode} >
             <NoPanContainer ref={noPanRef}>
               <NoPanArea>
                 {notesData.map((note: NoteData) => (
