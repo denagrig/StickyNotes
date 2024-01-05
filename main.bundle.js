@@ -23412,7 +23412,7 @@ const TextArea = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].texta
   resize: none;
   border: none;
   background: inherit;
-  overflow: auto;
+  overflow: ${(props) => props.$fontSize == 16 ? "auto" : "hidden"};
   font-size: ${(props) => props.$fontSize + "px" || 0};
   &::-webkit-scrollbar {
     background-color: transparent;
@@ -23940,14 +23940,12 @@ const MainPage = () => {
             yCord: spaceRef.current?.viewPort?.top || 0,
             zoomFactor: spaceRef.current?.viewPort?.zoomFactor || 1,
         };
-        window.location.search =
+        history.pushState({}, "", "?" +
+            newSpaceData.xCord +
             "?" +
-                newSpaceData.xCord +
-                "?" +
-                newSpaceData.yCord +
-                "?" +
-                newSpaceData.zoomFactor;
-        console.log(newSpaceData.zoomFactor);
+            newSpaceData.yCord +
+            "?" +
+            newSpaceData.zoomFactor);
         dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_7__.setSpaceData)(newSpaceData));
     }, [dispatch]);
     (0,react__WEBPACK_IMPORTED_MODULE_8__.useEffect)(() => {
@@ -23973,9 +23971,10 @@ const MainPage = () => {
         else if (mode == src_data__WEBPACK_IMPORTED_MODULE_9__.Mode.Grabbing)
             dispatch((0,src_slices_spaceSlice__WEBPACK_IMPORTED_MODULE_7__.setMode)(src_data__WEBPACK_IMPORTED_MODULE_9__.Mode.Move));
     };
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_5__.MainPageContainer, { onMouseUp: () => updateSpaceData(), onTouchEnd: () => updateSpaceData(), "data-testid": "space", children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_5__.SpaceContainer, { ref: spaceContainerRef, onMouseDown: changeCursor, onTouchStart: changeCursor, onMouseUp: changeCursor, onTouchEnd: changeCursor, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_3__.Space, { onCreate: (vp) => {
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_5__.MainPageContainer, { onMouseUp: () => updateSpaceData(), onTouchEnd: () => updateSpaceData(), children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_5__.SpaceContainer, { ref: spaceContainerRef, onMouseDown: changeCursor, onTouchStart: changeCursor, onMouseUp: changeCursor, onTouchEnd: changeCursor, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_3__.Space, { onCreate: (vp) => {
                         vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] });
                         vp.camera.moveBy(0, 0, spaceData.zoomFactor - 1);
+                        vp.camera.updateTopLeft(0, 0);
                         vp.camera.moveBy(spaceData.xCord, spaceData.yCord);
                     }, ref: spaceRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_5__.BackgroundImg, { "$mode": mode, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_pages_MainPage_MainPage_styled__WEBPACK_IMPORTED_MODULE_5__.NoPanContainer, { ref: noPanRef, children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_zoomable_ui__WEBPACK_IMPORTED_MODULE_3__.NoPanArea, { children: notesData.map((note) => ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_StickyNote_StickyNote__WEBPACK_IMPORTED_MODULE_1__["default"], { note: note }, note.id))) }) }) }) }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(src_components_PageHeader_PageHeader__WEBPACK_IMPORTED_MODULE_4__["default"], {})] }));
 };
