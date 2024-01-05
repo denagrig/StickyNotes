@@ -45,7 +45,7 @@ export const TextArea = styled.textarea<{ $fontSize?: number;}>`
   resize: none;
   border: none;
   background: inherit;
-  overflow:  ${(props) => props.$fontSize == 16 ? "auto" : "hidden"};
+  overflow: auto;
   font-size: ${(props) => props.$fontSize + "px" || "24px"};
   &::-webkit-scrollbar {
     background-color: transparent;
