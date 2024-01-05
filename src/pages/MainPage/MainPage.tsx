@@ -81,14 +81,14 @@ const MainPage = () => {
       yCord: spaceRef.current?.viewPort?.top || 0,
       zoomFactor: spaceRef.current?.viewPort?.zoomFactor || 1,
     }
-    window.location.search =
-    "?" +
-    newSpaceData.xCord +
-    "?" +
-    newSpaceData.yCord +
-    "?" +
-    newSpaceData.zoomFactor
-    console.log(newSpaceData.zoomFactor)
+    history.pushState({}, "", 
+      "?" +
+      newSpaceData.xCord +
+      "?" +
+      newSpaceData.yCord +
+      "?" +
+      newSpaceData.zoomFactor)
+    console.log(newSpaceData)
     dispatch(setSpaceData(newSpaceData))
   }, [dispatch])
 
@@ -119,6 +119,7 @@ const MainPage = () => {
     <MainPageContainer
       onMouseUp={() => updateSpaceData()}
       onTouchEnd={() => updateSpaceData()}
+      data-testid = {"space" }
     >
       <SpaceContainer
         ref={spaceContainerRef}
@@ -131,6 +132,7 @@ const MainPage = () => {
           onCreate={(vp) => {
             vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] })
             vp.camera.moveBy(0, 0, spaceData.zoomFactor - 1)
+            vp.camera.updateTopLeft(0, 0)
             vp.camera.moveBy(spaceData.xCord, spaceData.yCord)
           }}
           ref={spaceRef}
