@@ -40,7 +40,7 @@ export const testNotes: NoteData[] = [
     yCord: "0px",
     height: "300px",
     width: "300px",
-    text: "",
+    text: "Test",
     fontSize: 24,
     color: "green",
   },

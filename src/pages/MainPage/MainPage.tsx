@@ -126,12 +126,14 @@ const MainPage = () => {
         onTouchStart={changeCursor}
         onMouseUp={changeCursor}
         onTouchEnd={changeCursor}
+        data-testid = {"space" }
       >
         <Space
           onCreate={(vp) => {
             vp.setBounds({ x: [0, 10000], y: [0, 10000], zoom: [0.125, 3] })
             vp.camera.moveBy(0, 0, spaceData.zoomFactor - 1)
             vp.camera.moveBy(spaceData.xCord, spaceData.yCord)
+            
           }}
           ref={spaceRef}
         >
