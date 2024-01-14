@@ -22,8 +22,7 @@ const config: Config = {
   collectCoverage: true,
   clearMocks: true,
   coverageDirectory: "coverage",
-  testEnvironment: "jsdom",
-
+  testEnvironment: "allure-jest/jsdom",
 }
 
 export default config

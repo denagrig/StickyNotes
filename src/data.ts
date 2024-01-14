@@ -33,18 +33,29 @@ export const colors = [
   "darkcyan",
 ]
 
-export const testNotes: NoteData[] = [
-  {
-    id: 1,
-    xCord: "0px",
-    yCord: "0px",
-    height: "300px",
-    width: "300px",
-    text: "Test",
-    fontSize: 24,
-    color: "green",
-  },
-]
+export const testNote1: NoteData = {
+  id: 1,
+  xCord: "0px",
+  yCord: "0px",
+  height: "300px",
+  width: "300px",
+  text: "Test1",
+  fontSize: 24,
+  color: "green",
+}
+
+export const testNote2: NoteData = {
+  id: 2,
+  xCord: "0px",
+  yCord: "0px",
+  height: "300px",
+  width: "300px",
+  text: "Test2",
+  fontSize: 24,
+  color: "green",
+}
+
+export const testNotes: NoteData[] = [testNote1, testNote2]
 
 export const testVpData: VpData = {
   xCord: 1,

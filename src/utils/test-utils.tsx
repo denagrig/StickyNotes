@@ -8,7 +8,7 @@ import noteReducer from "src/slices/noteSlice"
 import spaceReducer from "src/slices/spaceSlice"
 
 import type { AppStore, RootState } from "../store"
-import {  testNotes, testVpData } from "src/data"
+import {  Mode, testNotes, testVpData } from "src/data"
 // As a basic setup, import your same slice reducers
 
 // This type interface extends the default options for render from RTL, as well
@@ -27,7 +27,7 @@ export function renderWithProviders(
       },
       space: {
         vpData: testVpData,
-        mode: 1
+        mode: Mode.Add
       }
     },
     // Automatically create a store instance if no store was passed in
